@@ -1,0 +1,172 @@
+@import "compass";
+@import "normalize.scss/normalize.scss";
+@import "font-awesome/scss/font-awesome";
+
+$golden-ratio: (1 + sqrt(5))/2;
+
+* {
+    @include box-sizing(border-box);
+}
+
+body {
+    color: #333;
+    font-family: 'dejarip', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+a {
+    text-decoration: none;
+}
+
+.wrap {
+    @include pie-clearfix();
+    margin: 0 auto;
+    width: (($golden-ratio - 1) * 100%);
+}
+
+#masthead {
+    @include transition(background-color .25s ease);
+    background-color: rgba(#fff, .8);
+    border-bottom: 1px solid #ccc;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+
+    &:hover {
+        background-color: rgba(#fff, 1);
+    }
+
+    h1 {
+        float: left;
+        font-size: 1.125em;
+        font-weight: 700;
+        line-height: 40px;
+        margin: 0;
+
+        a {
+            display: block;
+            color: #333;
+            padding: 0 10px;
+        }
+    }
+
+    form {
+        float: right;
+        padding-right: 66px;
+        position: relative;
+        max-width: 500px;
+        width: 100%;
+
+        button {
+            border-left: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+            float: none;
+            position: absolute;
+            right: 0;
+            text-align: center;
+            top: 0;
+            width: 66px;
+        }
+    }
+
+    input {
+        background-color: transparent;
+        border: 0;
+        border-left: 1px solid #ccc;
+        font-size: .875em;
+        height: 40px;
+        margin: 0; 
+        outline: none;
+        padding: 0 10px;
+        width: 100%;
+    }
+
+    button {
+        background-color: transparent;
+        border: 0;
+        float: left;
+        font-size: .875em;
+        line-height: 40px;
+        margin: 0;
+        padding: 0 10px;
+        outline: none;
+        
+        &:active {
+            background-color: #eee;
+        }
+    }
+}
+
+#controls {
+    border-right: 1px solid #ccc;
+    float: right;
+
+    button {
+        color: #666;
+        padding: 0;
+        text-align: center;
+        width: 40px;
+    }
+}
+
+.song {
+    @include transition(width .25s ease);
+    margin: 80px auto 0;
+    min-width: 600px;
+    width: 100% - (($golden-ratio - 1) * 100%);
+
+    .media {
+        background-color: #000;
+        cursor: pointer;
+        height: 0;
+        overflow: hidden;
+        padding-bottom: 56.25%;
+        position: relative;
+        width: 100%;
+    }
+
+    .caption {
+        padding: 20px;
+    }
+
+    h2 {
+        font-weight: 400;
+        margin: 0;
+    }
+
+    iframe {
+        height: 100%;
+        position: absolute;
+        width: 100%;
+    }
+    
+    &.youtube {
+
+        img {
+            width: 100%;
+        }
+    }
+
+    &.soundcloud {
+        .media {
+            background-color: #000;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            width: 56.25%;
+        }
+    }
+
+    &.playing {
+        width: (($golden-ratio - 1) * 100%);
+
+        img {
+            display: none;
+        }
+    }
+}
