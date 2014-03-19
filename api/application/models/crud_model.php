@@ -1,72 +1,55 @@
 <?php
 
-class Channel_model extends CI_Model {
+class CRUD_model extends CI_Model {
 
-    public function create($data) {
+    public function create($table, $data) {
 
-        $this->db->insert('channels', $data);
+        $this->db->insert($table, $data);
 
         if ($this->db->affected_rows() > 0) {
-
             return $this->db->insert_id();
-
         } else {
-
             return false;
-        
         }
     } 
 
-    public function get($array) {
+    public function read($table, $array) {
 
         $this->db->where($array);
-
-        $query = $this->db->get('channels');
+        $query = $this->db->get($table);
 
         if ($query->num_rows() == 1) {
 
-            $row = $query->row();
-
-            $row->count = $this->Trak_model->count($row->id);
-
-            return $row;
+            return $query->row();
         
         } else if ($query->num_rows() > 1) {
 
             foreach ($query->result() as $row) {
-
-                $row->count = $this->Trak_model->count($row->id);
-
                 $data[] = $row;
-
             }
 
             return $data;
 
         } else {
-
             return false;
-
         }
 
     }
 
-    public function update($id, $data) {
+    public function update($table, $id, $data) {
 
         $this->db->where('id', $id);
-        $this->db->update('channels', $data);
+        $this->db->update($table, $data);
 
         if ($this->db->affected_rows() > 0) {
-
             return true;
-        
         }
     } 
 
-    public function delete($id) {
+    public function delete($table, $id) {
 
         $this->db->where('channel_id', $id);
-        $this->db->delete('channels'); 
+        $this->db->delete($table); 
 
         if ($this->db->affected_rows() > 0) {
 
@@ -77,5 +60,3 @@ class Channel_model extends CI_Model {
     }
 
 }
-
-?>

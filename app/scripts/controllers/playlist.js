@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('musicApp')
-  	.controller('PlaylistCtrl', function ($scope, $rootScope, PlayerService, PlaylistService) {
+  	.controller('PlaylistCtrl', function ($routeParams, $scope, $rootScope, PlayerService, PlaylistService) {
 
  		$scope.createPlayer = function(song, index, element) {
 
@@ -27,7 +27,7 @@ angular.module('musicApp')
     			$node.prepend($sacrifice);
     		
 	    		var newPlayer = new YT.Player('player', {
-			        videoId: song.sourceID,
+			        videoId: song.sourceId,
 			        playerVars: {
 			            wmode: 'opaque',
 			            showinfo: 0,
@@ -107,6 +107,13 @@ angular.module('musicApp')
 		}
 
 		var init = function() {
+
+			if ($routeParams.hash) {
+				PlaylistService.loadPlaylist($routeParams.hash)
+					.then(function(playlist) {
+						PlaylistService.setPlaylist(playlist.songs);
+					});
+			}
 
 			$scope.$watch(PlayerService.getPlayerStatus, function(status) {
 				$scope.playingStatus = status

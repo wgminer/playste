@@ -1,7 +1,32 @@
 'use strict';
 
 angular.module('musicApp')
-  	.controller('MastheadCtrl', function ($scope, $rootScope, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
+  	.controller('MastheadCtrl', function ($scope, $rootScope, $routeParams, $location, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
+
+  		$scope.savePlaylist = function() {
+
+  			// If playlist exists just update it
+  			if ($routeParams.hash) {
+
+
+  			// Else create a new playlist	
+  			} else {
+
+	  			var newPlaylist = PlaylistService.getPlaylist();
+
+	  			if (newPlaylist.length > 1) {
+
+		  			PlaylistService.createPlaylist(newPlaylist)
+		  				.then(function(callback){
+		  					alert(callback);
+		  					$location.path(callback);
+		  				});
+		  		} else {
+		  			alert('You can\'t have a playlist with only one song!');
+		  		}
+	  		}
+
+  		}
 	
   		$scope.togglePlay = function() {
 
@@ -41,12 +66,18 @@ angular.module('musicApp')
 	  			YoutubeAPI.getYTSongData(url)
 	  				.then(function(data){
 
+	  					if (data.items[0].snippet.thumbnails.maxres) {
+	  						var imageUrl = data.items[0].snippet.thumbnails.maxres.url;
+	  					} else {
+	  						var imageUrl = data.items[0].snippet.thumbnails.high.url;
+	  					}
+
 	  					var newSong = {
 	  						title: data.items[0].snippet.title,
-	  						image: data.items[0].snippet.thumbnails.maxres.url,
+	  						image: imageUrl,
 	  						url: 'https://www.youtube.com/watch?v='+data.items[0].id,
 	  						source: 'youtube',
-	  						sourceID: data.items[0].id,
+	  						sourceId: data.items[0].id,
 	  					}
 
 	  					PlaylistService.addToPlaylist(newSong);
@@ -73,7 +104,7 @@ angular.module('musicApp')
 	  						image: image.replace('large', 't500x500'),
 	  						url: data.permalink_url,
 	  						source: 'soundcloud',
-	  						sourceID: data.id,
+	  						sourceId: data.id,
 	  					}
 
 	  					PlaylistService.addToPlaylist(newSong);
@@ -92,6 +123,7 @@ angular.module('musicApp')
 
 
 		var init = function() {
+
 			$scope.$watch(PlayerService.getPlayerData, function(data) {
 
 				$scope.playing = data;

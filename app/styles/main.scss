@@ -121,9 +121,6 @@ a {
     .media {
         background-color: #000;
         cursor: pointer;
-        height: 0;
-        overflow: hidden;
-        padding-bottom: 56.25%;
         position: relative;
         width: 100%;
     }
@@ -146,6 +143,7 @@ a {
     &.youtube {
 
         img {
+            display: block;
             width: 100%;
         }
     }
@@ -164,6 +162,11 @@ a {
 
     &.playing {
         width: (($golden-ratio - 1) * 100%);
+
+        .media {
+            height: 0;
+            padding-bottom: 56.25%;
+        }
 
         img {
             display: none;
