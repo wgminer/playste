@@ -109,10 +109,23 @@ angular.module('musicApp')
 		var init = function() {
 
 			if ($routeParams.hash) {
-				PlaylistService.loadPlaylist($routeParams.hash)
+
+				// Get playlist from server
+				PlaylistService.getPlaylist($routeParams.hash)
 					.then(function(playlist) {
-						PlaylistService.setPlaylist(playlist.songs);
+
+						// Add playlist to global
+						$rootScope.playlist = playlist;
+
+						// Create copy to compare changes to
+						$rootScope.origPlaylist = $rootScope.playlist;
 					});
+
+			} else {
+
+				// Create an empty playlist object
+				$rootScope.playlist = {'songs': [], 'playlist': {}};
+
 			}
 
 			$scope.$watch(PlayerService.getPlayerStatus, function(status) {
@@ -122,16 +135,12 @@ angular.module('musicApp')
 					var $next = PlayerService.getPlayerElement()
 						.parent()
 						.next();
-					$scope.createPlayer($scope.playlist[index], index, $next.children('.media'));
+					$scope.createPlayer($rootScope.playlist.songs[index], index, $next.children('.media'));
 				}
 			}, true);
 
 			$scope.$watch(PlayerService.getPlayerData, function(data) {
 				$scope.playing = data;
-			}, true);
-
-			$scope.$watch(PlaylistService.getPlaylist, function(data) {
-				$scope.playlist = data;
 			}, true);
 
 		}

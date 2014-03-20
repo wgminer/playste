@@ -13,7 +13,7 @@ class CRUD_model extends CI_Model {
         }
     } 
 
-    public function read($table, $array) {
+    public function get($table, $array) {
 
         $this->db->where($array);
         $query = $this->db->get($table);

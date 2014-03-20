@@ -4,19 +4,6 @@ angular.module('musicApp')
 	.factory('PlaylistService', function ($http, $q) {
 
 		var url = 'http://localhost/ng-music/api/index.php/'
-		var playlist = [];
-
-		var setPlaylist = function(setTo) {
-			playlist = setTo;
-		}
-
-		var addToPlaylist = function(newSong) {
-			playlist.unshift(newSong);
-		}
-
-		var getPlaylist  = function() {
-			return playlist;
-		}
 
 		var createPlaylist = function(newPlaylist) {
 
@@ -34,7 +21,7 @@ angular.module('musicApp')
 
 		}
 
-		var loadPlaylist = function(hash) {
+		var getPlaylist = function(hash) {
 
 			var deferred = $q.defer();
 
@@ -54,11 +41,8 @@ angular.module('musicApp')
 		// Public API
 
 		return {
-			setPlaylist: setPlaylist,
-			addToPlaylist: addToPlaylist,
-			getPlaylist: getPlaylist,
 			createPlaylist: createPlaylist,
-			loadPlaylist: loadPlaylist
+			getPlaylist: getPlaylist
 		};
 
 	});

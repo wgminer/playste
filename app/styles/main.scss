@@ -4,6 +4,12 @@
 
 $golden-ratio: (1 + sqrt(5))/2;
 
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 * {
     @include box-sizing(border-box);
 }
@@ -23,6 +29,12 @@ a {
     @include pie-clearfix();
     margin: 0 auto;
     width: (($golden-ratio - 1) * 100%);
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #masthead {
@@ -60,6 +72,14 @@ a {
         max-width: 500px;
         width: 100%;
 
+        &.disabled {
+            input,
+            button {
+                background-color: #eee;
+                cursor: default;
+            }
+        }
+
         button {
             border-left: 1px solid #ccc;
             border-right: 1px solid #ccc;
@@ -93,9 +113,32 @@ a {
         margin: 0;
         padding: 0 10px;
         outline: none;
+
+        &.saved {
+            color: #999;
+            cursor: default;
+            font-style: italic;
+
+            &:hover,
+            &:active {
+                background-color: #fff;
+                border: 0;
+                margin: 0;
+            }
+        }
+
+        &.unsaved {
+            border-bottom: 1px solid blue;
+            margin-bottom: -1px;
+        }
+
+        &:hover {
+            background-color: #eee;
+        }
         
         &:active {
-            background-color: #eee;
+            border-bottom: 1px solid red;
+            margin-bottom: -1px;
         }
     }
 }
@@ -126,10 +169,11 @@ a {
     }
 
     .caption {
-        padding: 20px;
+        padding: 10px 0;
     }
 
     h2 {
+        @extend .ellipsis;
         font-weight: 400;
         margin: 0;
     }
@@ -138,6 +182,19 @@ a {
         height: 100%;
         position: absolute;
         width: 100%;
+    }
+
+    &.faux {
+        .media {
+            background-color: #fff;
+            border: 2px solid #ccc;
+            height: 0;
+            padding-bottom: 56.25%;
+        }
+
+        h2 {
+            color: #ccc;
+        }
     }
     
     &.youtube {
@@ -166,6 +223,10 @@ a {
         .media {
             height: 0;
             padding-bottom: 56.25%;
+        }
+
+        .caption {
+            padding: 10px;
         }
 
         img {

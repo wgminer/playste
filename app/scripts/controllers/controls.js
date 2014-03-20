@@ -1,30 +1,38 @@
 'use strict';
 
 angular.module('musicApp')
-  	.controller('MastheadCtrl', function ($scope, $rootScope, $routeParams, $location, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
+  	.controller('ControlsCtrl', function ($scope, $rootScope, $routeParams, $location, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
 
   		$scope.savePlaylist = function() {
 
-  			// If playlist exists just update it
-  			if ($routeParams.hash) {
+  			// If playlist is NOT saved
+  			if (!$scope.isSaved()) {
 
+	  			// If playlist exists just update it
+	  			if ($routeParams.hash) {
 
-  			// Else create a new playlist	
-  			} else {
+	  				console.log($rootScope.playlist.songs);
 
-	  			var newPlaylist = PlaylistService.getPlaylist();
+	  			// Else create a new playlist	
+	  			} else {
 
-	  			if (newPlaylist.length > 1) {
+		  			var newPlaylist = $rootScope.playlist.songs;
 
-		  			PlaylistService.createPlaylist(newPlaylist)
-		  				.then(function(callback){
-		  					alert(callback);
-		  					$location.path(callback);
-		  				});
-		  		} else {
-		  			alert('You can\'t have a playlist with only one song!');
+		  			if (newPlaylist.length > 1) {
+
+			  			PlaylistService.createPlaylist(newPlaylist)
+			  				.then(function(callback){
+			  					alert(callback);
+			  					$location.path(callback);
+			  				}, function(error) {
+			  					console.log(error);
+			  				});
+			  		} else {
+			  			alert('You can\'t have a playlist with only one song!');
+			  		}
 		  		}
-	  		}
+
+		  	}
 
   		}
 	
@@ -59,7 +67,9 @@ angular.module('musicApp')
 
 		$scope.addSong = function(url) {
 
-  			$scope.addingSong = true;
+			$rootScope.origPlaylist = angular.copy($rootScope.origPlaylist);
+
+  			$rootScope.addingSong = true;
 
   			if (url.indexOf('youtu') > -1) {
 
@@ -80,18 +90,19 @@ angular.module('musicApp')
 	  						sourceId: data.items[0].id,
 	  					}
 
-	  					PlaylistService.addToPlaylist(newSong);
+	  					$rootScope.playlist.songs.unshift(newSong);
 	  					
-	  					$scope.addingSong = false;
+	  					$rootScope.addingSong = false;
 	  					$scope.newSongUrl = '';
+	  				}, function(error){
+	  					console.log(error);
+	  					alert('Something went wrong');
 	  				});
 
 	  		} else if (url.indexOf('soundcloud') > -1) {
 
 	  			SoundCloudAPI.getSCSongData(url)
 	  				.then(function(data){
-
-	  					console.log(data);
 
 	  					if (data.artwork_url) {
 	  						var image = data.artwork_url;
@@ -107,10 +118,13 @@ angular.module('musicApp')
 	  						sourceId: data.id,
 	  					}
 
-	  					PlaylistService.addToPlaylist(newSong);
+	  					$rootScope.playlist.songs.unshift(newSong);
 
-	  					$scope.addingSong = false;
+	  					$rootScope.addingSong = false;
 	  					$scope.newSongUrl = '';
+	  				}, function(error){
+	  					console.log(error);
+	  					alert('Something went wrong');
 	  				});
 
 	  		} else {
@@ -119,6 +133,21 @@ angular.module('musicApp')
 
 	  		}
 
+  		}
+
+  		$scope.isSaved = function() {
+
+  			var status = false;
+
+  			if ($rootScope.origPlaylist) {
+
+	  			if ($rootScope.origPlaylist.songs == $rootScope.playlist.songs) {
+	  				status = true;
+	  			}
+
+	  		}
+
+  			return status;
   		}
 
 

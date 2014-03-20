@@ -1,6 +1,13 @@
 <section id="playlist">
+
+	<article class="song faux" ng-show="addingSong">
+		<div class="media"></div>
+		<div class="caption">
+			<h2>Loading...</h2>
+		</div>
+	</article>
 	
-	<article class="song {{ song.source }}" ng-repeat="song in playlist">
+	<article class="song {{ song.source }}" ng-repeat="song in playlist.songs">
 		<section class="media" ng-click="createPlayer(song, $index, $event.target); scrollView($event.target); $event.stopPropagation();">
 			<img ng-src="{{ song.image }}" alt="{{ song.title }}">
 		</section>

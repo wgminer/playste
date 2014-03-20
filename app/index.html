@@ -25,18 +25,18 @@
 		<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 	<![endif]-->
 
-	<header id="masthead" ng-controller="MastheadCtrl">
+	<header id="masthead" ng-controller="ControlsCtrl">
 		<div class="wrap">
 			<h1><a href="#/">Playste</a></h1>
-			<button ng-click="savePlaylist()">Save</button>
+			<button ng-click="savePlaylist()" ng-class="{'saved': isSaved(), 'unsaved': !isSaved()}" ng-bind="isSaved() ? 'Saved': 'Save'"></button>
 			<button>Share</button>
 			<section id="controls">
 				<button><i class="fa fa-step-backward"></i></button>
 				<button ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play': playerStatus == '2', 'fa-pause': playerStatus == '1', 'fa-bolt': playerStatus == (false || 0)}"></i></button>
 				<button><i class="fa fa-step-forward"></i></button>
 			</section>
-			<form ng-submit="addSong(newSongUrl)">
-				<input type="text" ng-model="newSongUrl" placeholder="Paste a URL from Youtube or SoundCloud">
+			<form ng-submit="addSong(newSongUrl)" ng-class="{'disabled': addingSong}">
+				<input type="text" ng-model="newSongUrl" ng-disabled="addingSong" placeholder="Paste a URL from Youtube or SoundCloud">
 				<button type="submit">Add</button>
 			</form>
 		</div>
@@ -91,7 +91,7 @@
 		<script src="scripts/controllers/playlist.js"></script>
 		<script src="scripts/services/playerservice.js"></script>
 		<script src="scripts/services/playlistservice.js"></script>
-		<script src="scripts/controllers/Masthead.js"></script>
+		<script src="scripts/controllers/controls.js"></script>
 		<!-- endbuild -->
 		
 </body>
