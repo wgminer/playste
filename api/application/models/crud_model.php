@@ -16,6 +16,11 @@ class CRUD_model extends CI_Model {
     public function get($table, $array) {
 
         $this->db->where($array);
+
+        if ($table == 'songs') {
+            $this->db->order_by('sortOrder', 'ASC');
+        }
+
         $query = $this->db->get($table);
 
         if ($query->num_rows() == 1) {
@@ -36,9 +41,9 @@ class CRUD_model extends CI_Model {
 
     }
 
-    public function update($table, $id, $data) {
+    public function update($table, $array, $data) {
 
-        $this->db->where('id', $id);
+        $this->db->where($array);
         $this->db->update($table, $data);
 
         if ($this->db->affected_rows() > 0) {

@@ -37,12 +37,28 @@ angular.module('musicApp')
 
 		}
 
+		var updatePlaylist = function(hash, updatedPlaylist) {
+
+			var deferred = $q.defer();
+
+			$http.post(url+'playlists/'+hash, updatedPlaylist)
+				.success(function(data){
+					deferred.resolve(data);
+				})
+				.error(function(){
+					deferred.reject();
+				});
+
+			return deferred.promise;
+
+		}
 
 		// Public API
 
 		return {
 			createPlaylist: createPlaylist,
-			getPlaylist: getPlaylist
+			getPlaylist: getPlaylist,
+			updatePlaylist: updatePlaylist
 		};
 
 	});

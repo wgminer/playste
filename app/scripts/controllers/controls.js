@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('musicApp')
-  	.controller('ControlsCtrl', function ($scope, $rootScope, $routeParams, $location, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
+  	.controller('ControlsCtrl', function ($scope, $rootScope, $route, $routeParams, $location, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
 
   		$scope.savePlaylist = function() {
 
@@ -11,7 +11,19 @@ angular.module('musicApp')
 	  			// If playlist exists just update it
 	  			if ($routeParams.hash) {
 
-	  				console.log($rootScope.playlist.songs);
+	  				var updatedPlaylist = $rootScope.playlist.songs;
+
+		  			if (updatedPlaylist.length > 1) {
+
+			  			PlaylistService.updatePlaylist($routeParams.hash, updatedPlaylist)
+			  				.then(function(callback){
+			  					console.log('updated: ' + callback);
+			  					$route.reload();
+			  				}, function(error) {
+			  					console.log(error);
+			  				});
+
+			  		}
 
 	  			// Else create a new playlist	
 	  			} else {
@@ -22,17 +34,22 @@ angular.module('musicApp')
 
 			  			PlaylistService.createPlaylist(newPlaylist)
 			  				.then(function(callback){
-			  					alert(callback);
+			  					console.log('new: ' + callback);
 			  					$location.path(callback);
 			  				}, function(error) {
 			  					console.log(error);
 			  				});
+
 			  		} else {
 			  			alert('You can\'t have a playlist with only one song!');
 			  		}
 		  		}
 
 		  	}
+
+  		}
+
+  		$scope.toggleShare = function() {
 
   		}
 	
@@ -59,6 +76,10 @@ angular.module('musicApp')
 				$rootScope.playFirst();
 
 			}
+		}
+
+		$scope.previous = function() {
+			alert('This does nothing at the moment...');
 		}
 
 		$scope.next = function() {

@@ -33,7 +33,7 @@
 			<section id="controls">
 				<button><i class="fa fa-step-backward"></i></button>
 				<button ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play': playerStatus == '2', 'fa-pause': playerStatus == '1', 'fa-bolt': playerStatus == (false || 0)}"></i></button>
-				<button><i class="fa fa-step-forward"></i></button>
+				<button ng-click="next()"><i class="fa fa-step-forward"></i></button>
 			</section>
 			<form ng-submit="addSong(newSongUrl)" ng-class="{'disabled': addingSong}">
 				<input type="text" ng-model="newSongUrl" ng-disabled="addingSong" placeholder="Paste a URL from Youtube or SoundCloud">

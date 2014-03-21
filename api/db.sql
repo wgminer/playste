@@ -27,6 +27,7 @@ CREATE TABLE `songs` (
   `playlistId` int(11) NOT NULL,
   `sortOrder` int(11) NOT NULL,
   `created` datetime NOT NULL,
+  `updated` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 

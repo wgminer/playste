@@ -50,6 +50,7 @@ class Playlists extends CI_Controller {
             );
 
             $this->CRUD_model->create('songs', $new_song);
+
             $index++;
 
         }
@@ -69,6 +70,9 @@ class Playlists extends CI_Controller {
 
     public function update($hash) {
 
+        $playlist = $this->CRUD_model->get('playlists', array('hash' => $hash));
+        $playlist_id = $playlist->id; 
+
         $current_time = date('Y-m-d H:i:s');
 
         // Update playlist 'updated' 
@@ -77,7 +81,7 @@ class Playlists extends CI_Controller {
             'updated' => $current_time
         );
 
-        $this->CRUD_model->update('playlists', $updated_playlist);
+        $this->CRUD_model->update('playlists', array('id' => $playlist_id), $updated_playlist);
 
         // Create and associate the songs with new playlist
 
@@ -87,14 +91,14 @@ class Playlists extends CI_Controller {
         foreach ($playlist as $song) {
 
             // If it's a existing song
-            if ($song['id']) {
+            if (isset($song['id'])) {
 
                 $updated_song = array(
                     'sortOrder' => $index,
                     'updated' => $current_time
                 );
 
-                $this->CRUD_model->update('songs', $updated_song);
+                $this->CRUD_model->update('songs', array('id' => $song['id']), $updated_song);
 
             } else {
 
