@@ -3,6 +3,13 @@
 angular.module('musicApp')
   	.controller('ControlsCtrl', function ($scope, $rootScope, $route, $routeParams, $location, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
 
+  		$rootScope.$watch('playlist', function() {
+  			console.log('checking');
+  			if ($routeParams.hash) {
+	  			$scope.savePlaylist();
+	  		}
+  		});
+
   		$scope.savePlaylist = function() {
 
   			// If playlist is NOT saved
@@ -88,71 +95,76 @@ angular.module('musicApp')
 
 		$scope.addSong = function(url) {
 
-			$rootScope.origPlaylist = angular.copy($rootScope.origPlaylist);
+			if (!$rootScope.addingSong) {
 
-  			$rootScope.addingSong = true;
+				$rootScope.origPlaylist = angular.copy($rootScope.origPlaylist);
 
-  			if (url.indexOf('youtu') > -1) {
+	  			$rootScope.addingSong = true;
 
-	  			YoutubeAPI.getYTSongData(url)
-	  				.then(function(data){
+	  			if (url.indexOf('youtu') > -1) {
 
-	  					if (data.items[0].snippet.thumbnails.maxres) {
-	  						var imageUrl = data.items[0].snippet.thumbnails.maxres.url;
-	  					} else {
-	  						var imageUrl = data.items[0].snippet.thumbnails.high.url;
-	  					}
+		  			YoutubeAPI.getYTSongData(url)
+		  				.then(function(data){
 
-	  					var newSong = {
-	  						title: data.items[0].snippet.title,
-	  						image: imageUrl,
-	  						url: 'https://www.youtube.com/watch?v='+data.items[0].id,
-	  						source: 'youtube',
-	  						sourceId: data.items[0].id,
-	  					}
+		  					if (data.items[0].snippet.thumbnails.maxres) {
+		  						var imageUrl = data.items[0].snippet.thumbnails.maxres.url;
+		  					} else {
+		  						var imageUrl = data.items[0].snippet.thumbnails.high.url;
+		  					}
 
-	  					$rootScope.playlist.songs.unshift(newSong);
-	  					
-	  					$rootScope.addingSong = false;
-	  					$scope.newSongUrl = '';
-	  				}, function(error){
-	  					console.log(error);
-	  					alert('Something went wrong');
-	  				});
+		  					var newSong = {
+		  						title: data.items[0].snippet.title,
+		  						image: imageUrl,
+		  						url: 'https://www.youtube.com/watch?v='+data.items[0].id,
+		  						source: 'youtube',
+		  						sourceId: data.items[0].id,
+		  					}
 
-	  		} else if (url.indexOf('soundcloud') > -1) {
+		  					$rootScope.playlist.songs.unshift(newSong);
+		  					
+		  					$rootScope.addingSong = false;
+		  					$scope.newSongUrl = '';
+		  				}, function(error){
+		  					console.log(error);
+		  					alert('Something went wrong');
+		  				});
 
-	  			SoundCloudAPI.getSCSongData(url)
-	  				.then(function(data){
+		  		} else if (url.indexOf('soundcloud') > -1) {
 
-	  					if (data.artwork_url) {
-	  						var image = data.artwork_url;
-	  					} else {
-	  						var image = data.user.avatar_url;
-	  					}
+		  			SoundCloudAPI.getSCSongData(url)
+		  				.then(function(data){
 
-	  					var newSong = {
-	  						title: data.title,
-	  						image: image.replace('large', 't500x500'),
-	  						url: data.permalink_url,
-	  						source: 'soundcloud',
-	  						sourceId: data.id,
-	  					}
+		  					if (data.artwork_url) {
+		  						var image = data.artwork_url;
+		  					} else {
+		  						var image = data.user.avatar_url;
+		  					}
 
-	  					$rootScope.playlist.songs.unshift(newSong);
+		  					var newSong = {
+		  						title: data.title,
+		  						image: image.replace('large', 't500x500'),
+		  						url: data.permalink_url,
+		  						source: 'soundcloud',
+		  						sourceId: data.id,
+		  					}
 
-	  					$rootScope.addingSong = false;
-	  					$scope.newSongUrl = '';
-	  				}, function(error){
-	  					console.log(error);
-	  					alert('Something went wrong');
-	  				});
+		  					$rootScope.playlist.songs.unshift(newSong);
 
-	  		} else {
+		  					$rootScope.addingSong = false;
+		  					$scope.newSongUrl = '';
+		  				}, function(error){
+		  					console.log(error);
+		  					alert('Something went wrong');
+		  				});
 
-	  			alert('Not a valid source');
+		  		} else {
 
-	  		}
+		  			alert('Not a valid source');
+		  			$rootScope.addingSong = false;
+
+		  		}
+
+		  	}
 
   		}
 
