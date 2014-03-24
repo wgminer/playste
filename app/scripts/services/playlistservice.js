@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('musicApp')
-	.factory('PlaylistService', function ($http, $q) {
+	.factory('PlaylistService', function ($http, $q, UrlService) {
 
-		var url = 'http://localhost/ng-music/api/index.php/'
+		var url = UrlService.apiUrl();
+
+		console.log(url);
 
 		var createPlaylist = function(newPlaylist) {
 

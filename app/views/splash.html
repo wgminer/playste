@@ -1,0 +1,28 @@
+<header id="masthead">
+	<div class="wrap">
+		<h1><a href="#/">Playste</a></h1>	
+	</div>
+</header>
+
+<section id="splash">
+
+	<section id="call-to-action">
+		<h2>Collaborative playlists<br>with just your friends</h2>
+		<form ng-submit="addSong(newSongUrl)" ng-class="{'disabled': addingSong}">
+			<input type="text" ng-model="newSongUrl" ng-disabled="addingSong" placeholder="{{ placeholder }}">
+			<button type="submit" ng-class="{'clicked': buttonClick}">Start Playlist</button>
+		</form>
+		<section>
+			<a href="">Explore</a>|<a href="">Login</a>
+		</section>
+	</section>
+
+	<section id="faux-playlist">
+		<article class="song {{ song.source }}" ng-repeat="song in demo">
+			<section class="media">
+				<img ng-src="{{ song.image }}" alt="{{ song.title }}">
+			</section>
+		</article>
+	</section>
+	
+</section>

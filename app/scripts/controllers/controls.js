@@ -10,6 +10,14 @@ angular.module('musicApp')
 	  		}
   		});
 
+  		$scope.saveStatus = function() {
+
+  			var status = 'Save';
+
+
+  			return status;
+  		}
+
   		$scope.savePlaylist = function() {
 
   			// If playlist is NOT saved
