@@ -1,7 +1,15 @@
 'use strict';
 
 angular.module('musicApp')
-  	.controller('SplashCtrl', function ($routeParams, $scope, $rootScope, $interval, $timeout, SongService) {
+  	.controller('SplashCtrl', function ($routeParams, $scope, $rootScope, $location, $interval, $timeout, SongService, YoutubeAPI, SoundCloudAPI) {
+
+  		$scope.startPlaylist = function(url) {
+  			
+  			$rootScope.sentSongUrl = url;
+
+  			$location.path('/new');
+
+  		}
 
 
   		var autoPaste = function() {
@@ -12,46 +20,46 @@ angular.module('musicApp')
   			SongService.getSongs()
 				.then(function(songs) {
 
-		  			var action = $interval(function(){
+		  			// var action = $interval(function(){
 
-		  				if (songs.length > i && !$('#call-to-action input').is(':focus')) {
+		  			// 	if (songs.length > i && !$('#call-to-action input').is(':focus')) {
 
-		  					$scope.placeholder = songs[i].url;
+		  			// 		$scope.placeholder = songs[i].url;
 
-		  					$timeout(function(){
+		  			// 		$timeout(function(){
 
-		  						$scope.buttonClick = true;
-		  						$scope.placeholder = '';
-		  						$scope.demo.unshift(songs[i]);
+		  			// 			$scope.buttonClick = true;
+		  			// 			$scope.placeholder = '';
+		  			// 			$scope.demo.unshift(songs[i]);
 
-		  						if ($scope.demo.length > 5) {
-		  							$scope.demo.pop();
-		  						}
+		  			// 			if ($scope.demo.length > 5) {
+		  			// 				$scope.demo.pop();
+		  			// 			}
 
-		  						console.log($scope.demo);
+		  			// 			console.log($scope.demo);
 
-			  					$timeout(function(){
+			  		// 			$timeout(function(){
 
-				  					i++;
-				  					$scope.buttonClick = false;
+				  	// 				i++;
+				  	// 				$scope.buttonClick = false;
 
-			  					}, 100);
+			  		// 			}, 100);
 
-		  					}, 1000);
+		  			// 		}, 1000);
 
-			  			} else if (songs.length <= i && !$('#call-to-action input').is(':focus')) {
+			  		// 	} else if (songs.length <= i && !$('#call-to-action input').is(':focus')) {
 
-			  				$scope.demo = [];
-							i = 0;
-							console.log('reset!');
+			  		// 		$scope.demo = [];
+							// i = 0;
+							// console.log('reset!');
 			  				
-			  			} else {
+			  		// 	} else {
 
-			  				// focued
+			  		// 		clearInterval(action);
 
-			  			}
+			  		// 	}
 
-		  			}, 3333);
+		  			// }, 3333);
 
 		  		});
 

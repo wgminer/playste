@@ -1,7 +1,190 @@
 'use strict';
 
 angular.module('musicApp')
-  	.controller('PlaylistCtrl', function ($routeParams, $scope, $rootScope, PlayerService, PlaylistService) {
+  	.controller('PlaylistCtrl', function ($scope, $route, $routeParams, $location, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
+
+  		// Masthead functions
+  		
+  		$scope.isSaved = function() {
+
+  			var text = 'Save';
+  			var isSaved = false;
+
+  			if ($scope.origPlaylist) {
+
+	  			if ($scope.origPlaylist.songs.compare(removeHashkey($scope.playlist.songs))) {
+	  				text = 'Saved';
+	  				isSaved = true;
+	  			}
+
+	  			console.log($scope.origPlaylist.songs.compare(removeHashkey($scope.playlist.songs)));
+
+	  		}
+
+	  		$scope.saveButtonText = text;
+  			return isSaved;
+
+  		}
+
+
+  		$scope.savePlaylist = function() {
+
+  			console.log($scope.playlist);
+
+  			// If playlist is NOT saved
+  			if (!$scope.isSaved()) {
+
+	  			// If playlist exists just update it
+	  			if ($routeParams.hash) {
+
+	  				var updatedPlaylist = $scope.playlist.songs;
+
+		  			if (updatedPlaylist.length > 1) {
+
+			  			PlaylistService.updatePlaylist($routeParams.hash, updatedPlaylist)
+			  				.then(function(callback){
+			  					console.log('updated: ' + callback);
+			  					$route.reload();
+			  				}, function(error) {
+			  					console.log(error);
+			  				});
+
+			  		}
+
+	  			// Else create a new playlist	
+	  			} else {
+
+		  			var newPlaylist = $scope.playlist.songs;
+
+		  			if (newPlaylist.length > 1) {
+
+			  			PlaylistService.createPlaylist(newPlaylist)
+			  				.then(function(callback){
+			  					console.log('new: ' + callback);
+			  					$location.path(callback);
+			  				}, function(error) {
+			  					console.log(error);
+			  				});
+
+			  		} else {
+			  			alert('You can\'t have a playlist with only one song!');
+			  		}
+		  		}
+
+		  	}
+
+  		}
+
+		$scope.addSong = function(url) {
+
+			if (!$scope.addingSong) {
+
+				$scope.origPlaylist = angular.copy($scope.origPlaylist);
+
+	  			$scope.addingSong = true;
+
+	  			if (url.indexOf('youtu') > -1) {
+
+		  			YoutubeAPI.getYTSongData(url)
+		  				.then(function(data){
+
+		  					if (data.items[0].snippet.thumbnails.maxres) {
+		  						var imageUrl = data.items[0].snippet.thumbnails.maxres.url;
+		  					} else {
+		  						var imageUrl = data.items[0].snippet.thumbnails.high.url;
+		  					}
+
+		  					var newSong = {
+		  						title: data.items[0].snippet.title,
+		  						image: imageUrl,
+		  						url: 'https://www.youtube.com/watch?v='+data.items[0].id,
+		  						source: 'youtube',
+		  						sourceId: data.items[0].id,
+		  					}
+
+		  					$scope.playlist.songs.unshift(newSong);
+		  					
+		  					$scope.addingSong = false;
+		  					$scope.newSongUrl = '';
+		  				}, function(error){
+		  					console.log(error);
+		  					alert('Something went wrong');
+		  				});
+
+		  		} else if (url.indexOf('soundcloud') > -1) {
+
+		  			SoundCloudAPI.getSCSongData(url)
+		  				.then(function(data){
+
+		  					if (data.artwork_url) {
+		  						var image = data.artwork_url;
+		  					} else {
+		  						var image = data.user.avatar_url;
+		  					}
+
+		  					var newSong = {
+		  						title: data.title,
+		  						image: image.replace('large', 't500x500'),
+		  						url: data.permalink_url,
+		  						source: 'soundcloud',
+		  						sourceId: data.id,
+		  					}
+
+		  					$scope.playlist.songs.unshift(newSong);
+
+		  					$scope.addingSong = false;
+		  					$scope.newSongUrl = '';
+		  				}, function(error){
+		  					console.log(error);
+		  					alert('Something went wrong');
+		  				});
+
+		  		} else {
+
+		  			alert('Not a valid source');
+		  			$scope.addingSong = false;
+
+		  		}
+
+		  	}
+
+  		}
+
+  		$scope.togglePlay = function() {
+
+  			if (PlayerService.getPlayerStatus() == 2) {
+
+				if (PlayerService.getPlayerData().source == 'youtube'){
+					PlayerService.getPlayer().playVideo();
+				} else if(PlayerService.getPlayerData().source == 'soundcloud'){ 
+					PlayerService.getPlayer().play();
+				}
+
+			} else if (PlayerService.getPlayerStatus() == 1) {
+
+				if (PlayerService.getPlayerData().source == 'youtube'){
+					PlayerService.getPlayer().pauseVideo();
+				} else if(PlayerService.getPlayerData().source == 'soundcloud'){ 
+					PlayerService.getPlayer().pause();
+				}
+			
+			} else {
+
+				$scope.playFirst();
+
+			}
+		}
+
+		$scope.previous = function() {
+			alert('This does nothing at the moment...');
+		}
+
+		$scope.next = function() {
+			PlayerService.setPlayerStatus(0);
+		}
+
+
+  		// Playlist functions
 
  		$scope.createPlayer = function(song, index, element) {
 
@@ -89,14 +272,60 @@ angular.module('musicApp')
 
     	}
 
-    	$rootScope.playFirst = function() {
+    	$scope.playFirst = function() {
     		console.log($('.song').first().children('.media'));
     		$scope.createPlayer($scope.playlist[0], 0, $('.song').first().children('.media'));
     	};
 
 
-    	// Private Methods
+    	$scope.shift = function(current_index, destination_index) {
 
+    		$scope.playlist.songs.splice(destination_index, 0, $scope.playlist.songs.splice(current_index, 1)[0]);
+
+    	}
+
+    	$scope.remove = function(index) {
+
+    		$scope.playlist.songs.splice(index, 1);
+
+    	}
+
+
+    	// Private Methods
+    	
+    	var removeHashkey = function(array) {
+		    var output;
+
+		    output = angular.toJson(array);
+		    output = angular.fromJson(output);
+
+		    return output;
+		}
+
+		Array.prototype.compare = function (array) {
+		    // if the other array is a falsy value, return
+		    if (!array)
+		        return false;
+
+		    // compare lengths - can save a lot of time
+		    if (this.length != array.length)
+		        return false;
+
+		    for (var i = 0, l=this.length; i < l; i++) {
+		        // Check if we have nested arrays
+		        if (this[i] instanceof Array && array[i] instanceof Array) {
+		            // recurse into the nested arrays
+		            if (!this[i].compare(array[i]))
+		                return false;
+		        }
+		        else if (this[i] != array[i]) {
+		            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+		            return false;
+		        }
+		    }
+		    return true;
+		}
+		
 		var onPlayerReady = function (event) {
 		    event.target.playVideo();
 		}
@@ -115,16 +344,16 @@ angular.module('musicApp')
 					.then(function(playlist) {
 
 						// Add playlist to global
-						$rootScope.playlist = playlist;
+						$scope.playlist = playlist;
 
 						// Create copy to compare changes to
-						$rootScope.origPlaylist = $rootScope.playlist;
+						$scope.origPlaylist = angular.copy($scope.playlist);
 					});
 
 			} else {
 
 				// Create an empty playlist object
-				$rootScope.playlist = {'songs': [], 'playlist': {}};
+				$scope.playlist = {'songs': [], 'playlist': {}};
 
 			}
 
@@ -135,12 +364,25 @@ angular.module('musicApp')
 					var $next = PlayerService.getPlayerElement()
 						.parent()
 						.next();
-					$scope.createPlayer($rootScope.playlist.songs[index], index, $next.children('.media'));
+					$scope.createPlayer($scope.playlist.songs[index], index, $next.children('.media'));
 				}
 			}, true);
 
 			$scope.$watch(PlayerService.getPlayerData, function(data) {
 				$scope.playing = data;
+			}, true);
+
+
+			$scope.$watch(PlayerService.getPlayerData, function(data) {
+
+				$scope.playing = data;
+
+			}, true);
+
+			$scope.$watch(PlayerService.getPlayerStatus, function(status) {
+
+				$scope.playerStatus = status;
+
 			}, true);
 
 		}

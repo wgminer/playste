@@ -3,22 +3,22 @@
 angular.module('musicApp')
   	.controller('ControlsCtrl', function ($scope, $rootScope, $route, $routeParams, $location, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
 
-  		$rootScope.$watch('playlist', function() {
-  			console.log('checking');
-  			if ($routeParams.hash) {
-	  			$scope.savePlaylist();
-	  		}
-  		});
+  		// $rootScope.$watch('playlist', function() {
+  		// 	console.log('checking');
+  		// 	if ($routeParams.hash) {
+	  	// 		$scope.savePlaylist();
+	  	// 	}
+  		// });
 
   		$scope.saveStatus = function() {
 
   			var status = 'Save';
-
-
   			return status;
   		}
 
   		$scope.savePlaylist = function() {
+
+  			console.log($rootScope.playlist);
 
   			// If playlist is NOT saved
   			if (!$scope.isSaved()) {
@@ -61,10 +61,6 @@ angular.module('musicApp')
 		  		}
 
 		  	}
-
-  		}
-
-  		$scope.toggleShare = function() {
 
   		}
 	
@@ -193,6 +189,10 @@ angular.module('musicApp')
 
 
 		var init = function() {
+
+			if ($rootScope.sentSongUrl) {
+				$scope.addSong($rootScope.sentSongUrl);
+			}
 
 			$scope.$watch(PlayerService.getPlayerData, function(data) {
 

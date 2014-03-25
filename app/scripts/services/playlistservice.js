@@ -5,8 +5,6 @@ angular.module('musicApp')
 
 		var url = UrlService.apiUrl();
 
-		console.log(url);
-
 		var createPlaylist = function(newPlaylist) {
 
 			var deferred = $q.defer();

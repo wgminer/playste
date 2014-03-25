@@ -8,7 +8,7 @@
 
 	<section id="call-to-action">
 		<h2>Collaborative playlists<br>with just your friends</h2>
-		<form ng-submit="addSong(newSongUrl)" ng-class="{'disabled': addingSong}">
+		<form ng-submit="startPlaylist(newSongUrl)" ng-class="{'disabled': addingSong}">
 			<input type="text" ng-model="newSongUrl" ng-disabled="addingSong" placeholder="{{ placeholder }}">
 			<button type="submit" ng-class="{'clicked': buttonClick}">Start Playlist</button>
 		</form>

@@ -1,7 +1,7 @@
-<header id="masthead" ng-controller="ControlsCtrl">
+<header id="masthead">
 	<div class="wrap">
 		<h1><a href="#/">Playste</a></h1>
-		<button ng-click="savePlaylist()" ng-class="{'saved': isSaved(), 'unsaved': !isSaved()}" ng-bind="saveStatus();"></button>
+		<button ng-click="savePlaylist()" ng-class="{'saved': isSaved(), 'unsaved': !isSaved()}" ng-bind="saveButtonText"></button>
 		<button>Share</button>
 		<section id="controls">
 			<button><i class="fa fa-step-backward"></i></button>
@@ -27,10 +27,16 @@
 	<article class="song {{ song.source }}" ng-repeat="song in playlist.songs ">
 		<section class="media" ng-click="createPlayer(song, $index, $event.target); scrollView($event.target); $event.stopPropagation();">
 			<img ng-src="{{ song.image }}" alt="{{ song.title }}">
+			<section class="controls">
+				<button type="button" ng-click="shift($index, $index-1); $event.stopPropagation();"><i class="fa fa-caret-up"></i></button>
+				<button type="button" ng-click="remove($index); $event.stopPropagation();"><i class="fa fa-times"></i></button>
+				<button type="button" ng-click="shift($index, $index+1); $event.stopPropagation();"><i class="fa fa-caret-down"></i></button>
+			</section>
 		</section>
 		<section class="caption">
 			<h2 ng-bind="song.title"></h2>
 		</section>
+		
 	</article>
 
 </section>
