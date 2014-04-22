@@ -3,6 +3,11 @@
 angular.module('musicApp')
   	.controller('SplashCtrl', function ($routeParams, $scope, $rootScope, $location, $interval, $timeout, SongService, YoutubeAPI, SoundCloudAPI) {
 
+  		/**
+  		 * Sets up new playlist
+  		 * @param  {string} url
+  		 * @return {undefined}
+  		 */
   		$scope.startPlaylist = function(url) {
   			
   			$rootScope.sentSongUrl = url;
@@ -11,7 +16,10 @@ angular.module('musicApp')
 
   		}
 
-
+  		/**
+  		 * Runs the animation on the splash page
+  		 * @return {undefined}
+  		 */
   		var autoPaste = function() {
 
   			$scope.demo = [];
@@ -70,6 +78,10 @@ angular.module('musicApp')
 
     	// Private Methods
 
+    	/**
+    	 * Run it!
+    	 * @return {undefined}
+    	 */
 		var init = function() {
 
 			autoPaste();

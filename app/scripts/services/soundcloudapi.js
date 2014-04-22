@@ -5,6 +5,11 @@ angular.module('musicApp')
 
 		var scAPIKey = 'e0ac220c7f34ae5602f816d9b51e12e3';
 
+		/**
+		 * Get song data from SC
+		 * @param  {string} url
+		 * @return {object}
+		 */
 		var getSCSongData = function(url) {
 
 			SC.initialize({

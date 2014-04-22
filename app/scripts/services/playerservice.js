@@ -3,6 +3,10 @@
 angular.module('musicApp')
 	.factory('PlayerService', function () {
 
+		/**
+		 * A bunch of functions to pass the player object and element between controller...
+		 */
+
 		var player = false;
 		var playerStatus = false;
 		var playerData = false;

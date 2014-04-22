@@ -5,6 +5,10 @@ angular.module('musicApp')
 
 		var url = UrlService.apiUrl();
 
+		/**
+		 * Get individual songs from the server
+		 * @return {object}
+		 */
 		var getSongs = function() {
 
 			var deferred = $q.defer();
