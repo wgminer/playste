@@ -5,6 +5,11 @@ angular.module('musicApp')
 
 		var url = UrlService.apiUrl();
 
+		/**
+		 * Post's playlist to server
+		 * @param  {object} newPlaylist
+		 * @return {undefined}
+		 */
 		var createPlaylist = function(newPlaylist) {
 
 			var deferred = $q.defer();
@@ -21,6 +26,11 @@ angular.module('musicApp')
 
 		}
 
+		/**
+		 * Grabs playlist fronm server
+		 * @param  {string} hash
+		 * @return {object}
+		 */
 		var getPlaylist = function(hash) {
 
 			var deferred = $q.defer();
@@ -37,6 +47,12 @@ angular.module('musicApp')
 
 		}
 
+		/**
+		 * Updates the playlist on the server
+		 * @param  {string} hash
+		 * @param  {object} updatedPlaylist
+		 * @return {???}
+		 */
 		var updatePlaylist = function(hash, updatedPlaylist) {
 
 			var deferred = $q.defer();

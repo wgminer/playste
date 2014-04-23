@@ -5,6 +5,11 @@ angular.module('musicApp')
 
 		var ytAPIKey = 'AIzaSyCkoszshUaUgV-2CrviQI0I4pTkd8j61gc';
 
+		/**
+		 * Grab song data fron YT api
+		 * @param  {string} url
+		 * @return {object}
+		 */
 		var getYTSongData = function(url) {
 
 			// Check if it's a full youtube URL

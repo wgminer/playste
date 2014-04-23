@@ -5,6 +5,10 @@ angular.module('musicApp')
 
   		// Masthead functions
   		
+  		/**
+  		 * Check if playlist is saved
+  		 * @return {Boolean}
+  		 */
   		$scope.isSaved = function() {
 
   			var text = 'Save';
@@ -24,7 +28,10 @@ angular.module('musicApp')
 
   		}
 
-
+  		/**
+  		 * Save the playlist or create a new one if it's new
+  		 * @return {undefined}
+  		 */
   		$scope.savePlaylist = function() {
 
   			console.log($scope.playlist);
@@ -73,6 +80,11 @@ angular.module('musicApp')
 
   		}
 
+  		/**
+  		 * Add a song to the playlist
+  		 * TODO: Refactor into directive...
+  		 * @param {string} url
+  		 */
 		$scope.addSong = function(url) {
 
 			if (!$scope.addingSong) {
@@ -148,6 +160,11 @@ angular.module('musicApp')
 
   		}
 
+  		/**
+  		 * Toggle the play/pause of a song
+  		 * TODO: Directive-ize
+  		 * @return {undefined}
+  		 */
   		$scope.togglePlay = function() {
 
   			if (PlayerService.getPlayerStatus() == 2) {
@@ -173,10 +190,18 @@ angular.module('musicApp')
 			}
 		}
 
+		/**
+		 * Go back a song
+		 * @return {undefined}
+		 */
 		$scope.previous = function() {
 			alert('This does nothing at the moment...');
 		}
 
+		/**
+		 * Progress to next song
+		 * @return {undefined}
+		 */
 		$scope.next = function() {
 			PlayerService.setPlayerStatus(0);
 		}
@@ -184,6 +209,14 @@ angular.module('musicApp')
 
   		// Playlist functions
 
+  		/**
+  		 * Create a new player when user clicks on song thumbnail
+  		 * TODO: this REALLY needs to be a directive...
+  		 * @param  {object} song
+  		 * @param  {integer} index
+  		 * @param  {object} element
+  		 * @return {undefined}
+  		 */
  		$scope.createPlayer = function(song, index, element) {
 
 			if (element.jquery) { // if jquery element
@@ -234,6 +267,8 @@ angular.module('musicApp')
 
 				    PlayerService.setPlayer(newPlayer);
 				    $scope.$apply();
+
+				    // Bind all the SC events to the player...
 			
 		          	newPlayer.bind(SC.Widget.Events.FINISH, function(eventData) {
 		            	PlayerService.setPlayerStatus(0);
@@ -256,6 +291,12 @@ angular.module('musicApp')
 
     	}
 
+
+    	/**
+    	 * Keep the playing song in the user's view
+    	 * @param  {object} element
+    	 * @return {undefined}
+    	 */
     	$scope.scrollView = function(element) {
 
     		if (element.jquery) { // if jquery element
@@ -270,18 +311,33 @@ angular.module('musicApp')
 
     	}
 
+    	/**
+    	 * Play the first song in the list
+    	 * @return {undefined}
+    	 */
     	$scope.playFirst = function() {
     		console.log($('.song').first().children('.media'));
     		$scope.createPlayer($scope.playlist[0], 0, $('.song').first().children('.media'));
     	};
 
 
+    	/**
+    	 * Move the song up or down in the playlist
+    	 * @param  {integer} current_index
+    	 * @param  {integer} destination_index
+    	 * @return {undefined}
+    	 */
     	$scope.shift = function(current_index, destination_index) {
 
     		$scope.playlist.songs.splice(destination_index, 0, $scope.playlist.songs.splice(current_index, 1)[0]);
 
     	}
 
+    	/**
+    	 * Remove the song from the playlist
+    	 * @param  {integer} index
+    	 * @return {undefined}
+    	 */
     	$scope.remove = function(index) {
 
     		$scope.playlist.songs.splice(index, 1);
@@ -291,15 +347,39 @@ angular.module('musicApp')
 
     	// Private Methods
     	
+    	/**
+    	 * Remove the annoying hashkey angular adds so we can compare objects
+    	 * @param  {object array} array
+    	 * @return {object array}
+    	 */
+		/**
+		 * Compare two objectd
+		 * @param  {array} array
+		 * @return {boolean}
+		 */
+		/**
+		 * When YT player is ready
+		 * @param  {???} event
+		 * @return {undefined}
+		 */
 		var onPlayerReady = function (event) {
 		    event.target.playVideo();
 		}
 
+		/**
+		 * When YT player status changes...$apply it...
+		 * @param  {???} event
+		 * @return {[type]}
+		 */
     	var playerEvents = function (event) {
 			PlayerService.setPlayerStatus(event.data);
 			$scope.$apply();
 		}
 
+		/**
+		 * Run everything...
+		 * @return {[type]}
+		 */
 		var init = function() {
 
 			if ($routeParams.hash) {
@@ -308,10 +388,10 @@ angular.module('musicApp')
 				PlaylistService.getPlaylist($routeParams.hash)
 					.then(function(playlist) {
 
-						// Add playlist to global
+						// Add playlist to scope
 						$scope.playlist = playlist;
 
-						// Create copy to compare changes to
+						// Create copy to compare changes against later
 						$scope.origPlaylist = angular.copy($scope.playlist);
 					});
 
@@ -322,6 +402,11 @@ angular.module('musicApp')
 
 			}
 
+			/**
+			 * Watch the player status for changes
+			 * @param  {object} status
+			 * @return {undefined}
+			 */
 			$scope.$watch(PlayerService.getPlayerStatus, function(status) {
 				$scope.playingStatus = status
 				if (status === 0) {
@@ -333,17 +418,16 @@ angular.module('musicApp')
 				}
 			}, true);
 
+			/**
+			 * Watch for changes to the currently playing song
+			 * @param  {[type]} data
+			 * @return {[type]}
+			 */
 			$scope.$watch(PlayerService.getPlayerData, function(data) {
 				$scope.playing = data;
 			}, true);
 
-
-			$scope.$watch(PlayerService.getPlayerData, function(data) {
-
-				$scope.playing = data;
-
-			}, true);
-
+			//Duplicate???
 			$scope.$watch(PlayerService.getPlayerStatus, function(status) {
 
 				$scope.playerStatus = status;

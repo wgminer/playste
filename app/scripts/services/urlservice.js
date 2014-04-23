@@ -3,6 +3,10 @@
 angular.module('musicApp')
 	.factory('UrlService', function () {
 
+		/**
+		 * Config URL
+		 * @return {[type]}
+		 */
 		var apiUrl = function() {
 
 			if (location.hostname == '127.0.0.1' || location.hostname == 'localhost') {
