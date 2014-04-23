@@ -5,15 +5,15 @@ angular.module('musicApp')
 
 		var apiUrl = function() {
 
-			// if (location.hostname == '127.0.0.1 ' || location.hostname == 'localhost') {
+			if (location.hostname == '127.0.0.1' || location.hostname == 'localhost') {
 
 				var url = 'http://localhost/ng-music/api/index.php/';
 
-			// } else {
+			} else {
 
-			// 	// Production URL
+				// Production URL
 
-			// }
+			}
 
 			return url;
 

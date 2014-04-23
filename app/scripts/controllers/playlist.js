@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('musicApp')
-  	.controller('PlaylistCtrl', function ($scope, $route, $routeParams, $location, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
+  	.controller('PlaylistCtrl', function ($scope, $route, $routeParams, $location, _, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
 
   		// Masthead functions
   		
@@ -12,12 +12,10 @@ angular.module('musicApp')
 
   			if ($scope.origPlaylist) {
 
-	  			if ($scope.origPlaylist.songs.compare(removeHashkey($scope.playlist.songs))) {
+	  			if (angular.toJson($scope.origPlaylist.songs) == angular.toJson($scope.playlist.songs)) {
 	  				text = 'Saved';
 	  				isSaved = true;
 	  			}
-
-	  			console.log($scope.origPlaylist.songs.compare(removeHashkey($scope.playlist.songs)));
 
 	  		}
 
@@ -44,7 +42,7 @@ angular.module('musicApp')
 			  			PlaylistService.updatePlaylist($routeParams.hash, updatedPlaylist)
 			  				.then(function(callback){
 			  					console.log('updated: ' + callback);
-			  					$route.reload();
+			  					$scope.origPlaylist = angular.copy($scope.playlist);
 			  				}, function(error) {
 			  					console.log(error);
 			  				});
@@ -293,39 +291,6 @@ angular.module('musicApp')
 
     	// Private Methods
     	
-    	var removeHashkey = function(array) {
-		    var output;
-
-		    output = angular.toJson(array);
-		    output = angular.fromJson(output);
-
-		    return output;
-		}
-
-		Array.prototype.compare = function (array) {
-		    // if the other array is a falsy value, return
-		    if (!array)
-		        return false;
-
-		    // compare lengths - can save a lot of time
-		    if (this.length != array.length)
-		        return false;
-
-		    for (var i = 0, l=this.length; i < l; i++) {
-		        // Check if we have nested arrays
-		        if (this[i] instanceof Array && array[i] instanceof Array) {
-		            // recurse into the nested arrays
-		            if (!this[i].compare(array[i]))
-		                return false;
-		        }
-		        else if (this[i] != array[i]) {
-		            // Warning - two different object instances will never be equal: {x:20} != {x:20}
-		            return false;
-		        }
-		    }
-		    return true;
-		}
-		
 		var onPlayerReady = function (event) {
 		    event.target.playVideo();
 		}
