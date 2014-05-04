@@ -2,11 +2,6 @@
 
 class Playlists extends CI_Controller {
 
-    public function index() {
-
-        print 'Hello World';
-    }
-
     public function test() {
         $hash = $this->Playlist_model->generate_hash();
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('musicApp')
-  	.controller('PlaylistCtrl', function ($scope, $route, $routeParams, $location, _, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
+  	.controller('PlaylistCtrl', function ($scope, $route, $routeParams, $timeout, $location, _, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
 
   		// Masthead functions
   		
@@ -91,9 +91,14 @@ angular.module('musicApp')
 
 				$scope.origPlaylist = angular.copy($scope.origPlaylist);
 
-	  			$scope.addingSong = true;
+	  			$scope.addingSong = 'started';
 
-	  			if (url.indexOf('youtu') > -1) {
+	  			if (url == undefined){
+
+	  				alert('Don\'t leave it blank!');
+		  			$scope.addingSong = false;
+
+	  			} else if (url.indexOf('youtu') > -1) {
 
 		  			YoutubeAPI.getYTSongData(url)
 		  				.then(function(data){
@@ -112,10 +117,15 @@ angular.module('musicApp')
 		  						sourceId: data.items[0].id,
 		  					}
 
-		  					$scope.playlist.songs.unshift(newSong);
-		  					
-		  					$scope.addingSong = false;
-		  					$scope.newSongUrl = '';
+		  					$scope.addingSong = 'finish';
+
+		  					$timeout(function(){
+		  						$scope.playlist.songs.unshift(newSong);
+			  					$scope.addingSong = false;
+			  					$scope.newSongUrl = '';
+		  					}, 500);
+
+	
 		  				}, function(error){
 		  					console.log(error);
 		  					alert('Something went wrong');
@@ -140,10 +150,14 @@ angular.module('musicApp')
 		  						sourceId: data.id,
 		  					}
 
-		  					$scope.playlist.songs.unshift(newSong);
+		  					$scope.addingSong = 'finish';
 
-		  					$scope.addingSong = false;
-		  					$scope.newSongUrl = '';
+		  					$timeout(function(){
+		  						$scope.playlist.songs.unshift(newSong);
+			  					$scope.addingSong = false;
+			  					$scope.newSongUrl = '';
+		  					}, 500);
+		  					
 		  				}, function(error){
 		  					console.log(error);
 		  					alert('Something went wrong');
@@ -344,19 +358,13 @@ angular.module('musicApp')
 
     	}
 
+    	$scope.toggleLoginModal = function() {
+		    $scope.modalShown = !$scope.modalShown;
+		};
+
 
     	// Private Methods
     	
-    	/**
-    	 * Remove the annoying hashkey angular adds so we can compare objects
-    	 * @param  {object array} array
-    	 * @return {object array}
-    	 */
-		/**
-		 * Compare two objectd
-		 * @param  {array} array
-		 * @return {boolean}
-		 */
 		/**
 		 * When YT player is ready
 		 * @param  {???} event

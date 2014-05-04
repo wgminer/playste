@@ -16,6 +16,15 @@ $secondary-color: #E81C3C;
     text-overflow: ellipsis;
 }
 
+.code {
+    position: fixed;
+    bottom: 0;
+    background-color: #ccc;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+}
+
 * {
     @include box-sizing(border-box);
 }
@@ -25,11 +34,16 @@ body {
     font-family: 'dejarip', sans-serif;
     font-size: 16px;
     font-weight: 400;
+    line-height: 1.5;
 }
 
 a {
     color: $link-color;
     text-decoration: none;
+
+    &:hover {
+        color: darken($link-color, 5%);
+    }
 }
 
 img {
@@ -55,6 +69,11 @@ img {
     line-height: 40px;
 }
 
+.lead {
+    margin: 0 0 20px;
+    font-size: 1.5em;
+}
+
 #masthead {
     @include transition(background-color .25s ease);
     background-color: rgba(#fff, .8);
@@ -63,7 +82,7 @@ img {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 9999;
+    z-index: 8999;
 
     &:hover {
         background-color: rgba(#fff, 1);
@@ -79,21 +98,40 @@ img {
         a {
             display: block;
             color: $text-color;
-            padding: 0 10px;
+            padding: 0 20px;
         }
     }
 
     form {
-        float: right;
-        padding-right: 66px;
+        float: left;
+        padding-right: 67px;
         position: relative;
         max-width: 480px;
         width: 100%;
 
+        .loading-bar {
+            background-color: #eee;
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            z-index: -1;
+
+            &.load-slow {
+                @include transition(width 10s ease);
+                width: 50%;
+            }
+
+            &.load-fast {
+                @include transition(width .5s ease);
+                width: 100%;
+            }
+        }
+
         &.disabled {
             input,
             button {
-                background-color: #eee;
                 cursor: default;
 
                 &:active {
@@ -103,29 +141,31 @@ img {
             }
         }
 
+        input {
+            background-color: transparent;
+            border: 0;
+            border-left: 1px solid #ccc;
+            font-size: .875em;
+            height: 40px;
+            margin: 0; 
+            outline: none;
+            padding: 0 10px;
+            width: 100%;
+        }
+
         button {
             border-left: 1px solid #ccc;
             border-right: 1px solid #ccc;
-            float: none;
             position: absolute;
             right: 0;
             text-align: center;
             top: 0;
-            width: 66px;
+            width: 67px;
+            height: 40px;
         }
     }
 
-    input {
-        background-color: transparent;
-        border: 0;
-        border-left: 1px solid #ccc;
-        font-size: .875em;
-        height: 40px;
-        margin: 0; 
-        outline: none;
-        padding: 0 10px;
-        width: 100%;
-    }
+    
 
     button {
         background-color: transparent;
@@ -134,7 +174,7 @@ img {
         font-size: .875em;
         line-height: 40px;
         margin: 0;
-        padding: 0 10px;
+        padding: 0 20px;
         outline: none;
 
         &.saved {
@@ -164,114 +204,23 @@ img {
             margin-bottom: -1px;
         }
     }
-}
 
-#controls {
-    border-right: 1px solid #ccc;
-    float: right;
-
-    button {
-        color: #666;
-        padding: 0;
-        text-align: center;
-        width: 40px;
-    }
-}
-
-#splash {
-    height: 100%;
-    overflow: hidden;
-    position: absolute;
-    padding: 80px 0 0;
-    width: 100%;
-
-    h2 {
-        line-height: 1.2;
-        font-size: 4em;
-        font-weight: bold;
-        margin: 60px 0 0;
-    }
-
-    form {
-        margin-top: 60px;
-        padding-right: 150px;
-        position: relative;
-        width: 100%;
+    .controls {
+        border-right: 1px solid #ccc;
+        float: left;
 
         button {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 0 6px 6px 0;
-            color: #ccc;
-            font-size: 1.125em;
-            font-weight: bold;
-            line-height: 48px;
-            outline: none;
+            color: #666;
             padding: 0;
-            position: absolute;
-            right: 0;
             text-align: center;
-            top: 0;
-            width: 150px;
-
-            &:hover {
-                background-color: lighten(#ccc, 35%);
-            }
-
-            &:active,
-            &.clicked {
-                background-color: lighten($primary-color, 35%);
-                border-color: $primary-color;
-                color: $primary-color;
-            }
+            width: 40px;
         }
     }
 
-    input {
-        background-color: transparent;
-        border: 1px solid #ccc; 
-        border-right: 0;
-        border-radius: 6px 0 0 6px;
-        font-size: 1.125em;
-        height: 50px;
-        margin: 0; 
-        outline: none;
-        padding: 0 20px;
-        width: 100%;
-
-        &:focus {   
-            border-color: $primary-color;
-        }
+    .account {
+        float: right;
     }
-}
 
-#call-to-action {
-    margin: 0 auto;
-    text-align: center;
-    width: 100% - (($golden-ratio - 1) * 100%);
-
-    section {
-        color: #ccc;
-        font-size: 1.5em;
-        margin-top: 40px;
-
-        a {
-            padding: 0 20px;
-        }
-    }
-}
-
-
-#faux-playlist {
-    margin: 0 auto;
-    padding-top: 60px;
-    width: 100% - (($golden-ratio - 1) * 100%);
-
-    .song {
-        margin-bottom: 60px;
-        min-width: 0;
-        width: 400px;
-    }
 }
 
 #playlist {
@@ -282,7 +231,6 @@ img {
     @include transition(width .25s ease);
     margin: 0 auto 80px;
     min-width: 600px;
-    padding: 0 40px;
     position: relative;
     width: 100% - (($golden-ratio - 1) * 100%);
 
@@ -378,7 +326,7 @@ img {
         }
 
         .caption {
-            padding: 10px;
+            padding: 10px 20px;
         }
 
         img {
@@ -388,17 +336,90 @@ img {
 }
 
 
-.song.ng-enter,
-.song.ng-leave {
-  -webkit-transition:0.5s linear all;
-  transition:0.5s linear all;
+.modal-overlay {
+    position: absolute;
+    z-index: 9800;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: .8;
 }
 
-.song.ng-enter,
-.song.ng-leave.ng-leave-active {
-  opacity:0;
+.modal-dialog {
+    @include translate(-50%, -50%);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    z-index: 9900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #fff;
+    box-shadow: 4px 4px 80px #000;
 }
-.song.ng-leave,
-.song.ng-enter.ng-enter-active {
-  opacity:1;
+
+.modal-dialog-content {
+    text-align: left;
 }
+
+.modal-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    text-align: center;
+
+    i {
+        font-size: 1.25em;
+        color: #999;
+        display: block;
+        line-height: 40px;
+    }
+}
+
+.modal-form {
+    @include clearfix;
+    padding: 40px;
+    width: 500px;
+
+    .title {
+        margin: 0 0 10px;
+    }
+
+    input {
+        display: block;
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        outline: none;
+        margin-bottom: 10px;
+        width: 100%;
+
+        &:focus {
+            border-color: $primary-color;
+        }
+    }
+
+    button {
+        border: 1px solid #ccc;
+        background-color: #eee;
+        padding: 8px 20px;
+        text-align: center;
+        float: right;
+        margin: 0;
+        outline: none; 
+
+        &:active, 
+        &:focus {
+            border-color: $primary-color;
+        } 
+    }
+
+    &.login {
+        border-bottom: 1px solid #ccc;
+    }
+
+}
+

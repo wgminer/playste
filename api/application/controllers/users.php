@@ -2,30 +2,26 @@
 
 class Users extends CI_Controller {
 
-    public function index() {
-
-        $data = $this->User_model->get(array('id >' => 0));
-
-        echo json_encode($data);
-
-    }
-
     public function create() {
 
         $decoded_user = json_decode(file_get_contents('php://input'), TRUE);
 
+        $name = $decoded_user['name'];
         $email = $decoded_user['email'];
         $password = md5($decoded_user['password']);
+        $time = date('Y-m-d H:i:s');
         
         $data = array(
+            'name' => $name,
             'email' => $email,
             'password' => $password,
-            'permissions' => 0,
-            'created' => date('Y-m-d H:i:s'),
-            'updated' => date('Y-m-d H:i:s')
+            'created' => $time,
+            'updated' => $time
         );
 
-        if ($this->User_model->create($data) && $this->User_model->auth($email, $password)) {
+        if ($this->CRUD_model->create('users', $data)) {
+
+            $this->User_model->auth($email, $password);
 
             echo json_encode(array('id' => $this->session->userdata('id'), 'email' => $email));
 
@@ -41,14 +37,14 @@ class Users extends CI_Controller {
 
             $id = $this->session->userdata('id');
 
-            $data = $this->User_model->get(array('id' => $id));
+            $data = $this->CRUD_model->get('users', array('id' => $id));
 
             echo json_encode($data);
 
         } else {
 
+            // Unauthorized
             header('HTTP', TRUE, 401);
-            echo '/get unauthorized';
 
         }
 
@@ -70,7 +66,7 @@ class Users extends CI_Controller {
                 'updated' => date('Y-m-d H:i:s')
             );
 
-            if ($this->User_model->update($data)) {
+            if ($this->CRUD_model->update('users', $data)) {
                 // RETRUN SOMETHING HERE
             } else {
                 header('HTTP', TRUE, 401);
@@ -78,8 +74,8 @@ class Users extends CI_Controller {
 
         } else {
 
-            header('HTTP', TRUE, 501);
-            echo '/update unauthorized';
+            // Unauthorized
+            header('HTTP', TRUE, 401);
 
         }
 

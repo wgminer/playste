@@ -1,0 +1,174 @@
+$option-height: 224px;
+#options {
+    @include transition(top .25s ease);
+    @include pie-clearfix;
+    background-color: #fff;
+    height: $option-height;
+    position: fixed;
+    padding: 20px 0;
+    top: -$option-height;
+    width: 100%;
+    left: 0;
+    border-bottom: 1px solid #ccc;
+    z-index: 9000;
+
+    &.options-open {
+        top: 0;
+    }
+
+    .info,
+    .login {
+        float: left;
+        width: 50%;
+    }
+
+    .links {
+        margin: 0;
+
+        a {
+            margin-right: 10px;
+        }
+    }
+
+    .login {
+        @include pie-clearfix;
+
+        div {
+            float: left;
+            width: 50%;
+        }
+
+        input {
+            display: block;
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            outline: none;
+            margin-bottom: 10px;
+            width: 100%;
+
+            &:focus {
+                border-color: $primary-color;
+            }
+        }
+
+        button {
+            border: 1px solid #ccc;
+            background-color: #eee;
+            padding: 8px 0;
+            text-align: center;
+            margin: 0;
+            width: 100%;
+            outline: none; 
+
+            &:active, 
+            &:focus {
+                border-color: $primary-color;
+            } 
+        }
+
+        p {
+            margin: 0;
+            line-height: 50px;
+            text-align: center;
+        }
+    }
+}
+
+#splash {
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    padding: 80px 0 0;
+    width: 100%;
+
+    h2 {
+        line-height: 1.2;
+        font-size: 4em;
+        font-weight: bold;
+        margin: 60px 0 0;
+    }
+
+    form {
+        margin-top: 60px;
+        padding-right: 150px;
+        position: relative;
+        width: 100%;
+
+
+
+        button {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 0 6px 6px 0;
+            color: #ccc;
+            font-size: 1.125em;
+            font-weight: bold;
+            line-height: 48px;
+            outline: none;
+            padding: 0;
+            position: absolute;
+            right: 0;
+            text-align: center;
+            top: 0;
+            width: 150px;
+
+            &:hover {
+                background-color: lighten(#ccc, 35%);
+            }
+
+            &:active,
+            &.clicked {
+                background-color: lighten($primary-color, 35%);
+                border-color: $primary-color;
+                color: $primary-color;
+            }
+        }
+    }
+
+    input {
+        background-color: transparent;
+        border: 1px solid #ccc; 
+        border-right: 0;
+        border-radius: 6px 0 0 6px;
+        font-size: 1.125em;
+        height: 50px;
+        margin: 0; 
+        outline: none;
+        padding: 0 20px;
+        width: 100%;
+
+        &:focus {   
+            border-color: $primary-color;
+        }
+    }
+}
+
+#call-to-action {
+    margin: 0 auto;
+    text-align: center;
+    width: 100% - (($golden-ratio - 1) * 100%);
+
+    section {
+        color: #ccc;
+        font-size: 1.5em;
+        margin-top: 40px;
+
+        a {
+            padding: 0 20px;
+        }
+    }
+}
+
+
+#faux-playlist {
+    margin: 0 auto;
+    padding-top: 60px;
+    width: 100% - (($golden-ratio - 1) * 100%);
+
+    .song {
+        margin-bottom: 60px;
+        min-width: 0;
+        width: 400px;
+    }
+}
+

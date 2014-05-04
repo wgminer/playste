@@ -13,9 +13,9 @@ class CRUD_model extends CI_Model {
         }
     } 
 
-    public function get($table, $array) {
+    public function get($table, $match) {
 
-        $this->db->where($array);
+        $this->db->where($match);
 
         if ($table == 'songs') {
             $this->db->order_by('sortOrder', 'ASC');
@@ -41,9 +41,9 @@ class CRUD_model extends CI_Model {
 
     }
 
-    public function update($table, $array, $data) {
+    public function update($table, $match, $data) {
 
-        $this->db->where($array);
+        $this->db->where($match);
         $this->db->update($table, $data);
 
         if ($this->db->affected_rows() > 0) {

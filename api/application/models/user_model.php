@@ -2,60 +2,60 @@
 
 class User_model extends CI_Model {
 
-    public function create($data) {
+    // public function create($data) {
 
-        $this->db->insert('users', $data);
+    //     $this->db->insert('users', $data);
 
-        if ($this->db->affected_rows() > 0) {
-            return $this->db->insert_id();
-        } else {
-            return false;
-        }
-    } 
+    //     if ($this->db->affected_rows() > 0) {
+    //         return $this->db->insert_id();
+    //     } else {
+    //         return false;
+    //     }
+    // } 
 
-    public function get($array) {
+    // public function get($array) {
 
-        $this->db->select('id, email, permissions, created, updated');
-        $this->db->where($array);
-        $query = $this->db->get('users'); 
+    //     $this->db->select('id, email, permissions, created, updated');
+    //     $this->db->where($array);
+    //     $query = $this->db->get('users'); 
 
-        if ($query->num_rows() > 1) {
+    //     if ($query->num_rows() > 1) {
 
-            foreach ($query->result() as $row) {
-                $data[] = $row;
-            }
+    //         foreach ($query->result() as $row) {
+    //             $data[] = $row;
+    //         }
 
-            return $data;
+    //         return $data;
 
-        } else {
+    //     } else {
 
-            $row = $query->row();
+    //         $row = $query->row();
 
-            return $row;
+    //         return $row;
 
-        }
+    //     }
         
-    }
+    // }
 
-    public function update($id, $data) {
+    // public function update($id, $data) {
 
-        $this->db->where('id', $id);
-        $this->db->update('users', $data);
+    //     $this->db->where('id', $id);
+    //     $this->db->update('users', $data);
 
-        if ($this->db->affected_rows() > 0) {
-            return true;
-        }
-    } 
+    //     if ($this->db->affected_rows() > 0) {
+    //         return true;
+    //     }
+    // } 
 
-    public function delete($id) {
+    // public function delete($id) {
 
-        $this->db->where('id', $id);
-        $this->db->delete('mytable');
+    //     $this->db->where('id', $id);
+    //     $this->db->delete('mytable');
 
-        if ($this->db->affected_rows() > 0) {
-            return true;
-        }
-    }
+    //     if ($this->db->affected_rows() > 0) {
+    //         return true;
+    //     }
+    // }
 
     public function auth($email, $password) {
 

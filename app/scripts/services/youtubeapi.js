@@ -12,6 +12,8 @@ angular.module('musicApp')
 		 */
 		var getYTSongData = function(url) {
 
+			console.log('calling');
+
 			// Check if it's a full youtube URL
 			if (url.lastIndexOf('?v=') > -1) {
 				var start = url.lastIndexOf('?v=') + 3;
@@ -19,6 +21,8 @@ angular.module('musicApp')
 			// Else check if it's a shared URL
 			} else if (url.lastIndexOf('.be/') > -1) {
 				var start = url.lastIndexOf('.be/') + 4;
+			} else {
+				return 'error!';
 			}
 
 			var ytID = url.substring(start, start+11);
@@ -27,6 +31,7 @@ angular.module('musicApp')
 
 			$http.get(url)
 				.success(function(data){
+					console.log('done');
 					deferred.resolve(data);
 				})
 				.error(function(){
