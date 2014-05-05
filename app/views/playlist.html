@@ -13,7 +13,13 @@
 		</section>
 		<section class="account">
 			<button ng-show="playlist.songs.length > 0" ng-click="savePlaylist()" ng-class="{'saved': isSaved(), 'unsaved': !isSaved()}" ng-bind="saveButtonText"></button>
-			<button ng-click="toggleLoginModal()" class="login">Log In</button>
+			<button ng-click="toggleModal('login')" ng-show="!isAuthed" class="login">Log In</button>
+			<button ng-show="isAuthed" ng-click="toggleDropdown()" class="account">{{ User.name }} <i class="fa" ng-class="{'fa-caret-down': !isDropdownVisible, 'fa-caret-up': isDropdownVisible}"></i></button>
+			<div class="dropdown" ng-show="isDropdownVisible">
+				<a href="#/profile">Profile</a>
+				<a href="#/help">Help</a>
+				<a ng-click="signOut()">Sign Out</a>
+			</div>
 		</section>
 	</div>
 </header>
@@ -21,7 +27,7 @@
 <section id="playlist" ng-show="playlist.songs.length > 0" ng-class="{'options-open': isOptionsVisible}">
 	
 	<article class="song {{ song.source }}" ng-repeat="song in playlist.songs">
-		<section class="media" ng-click="createPlayer(song, $index, $event.target); scrollView($event.target); $event.stopPropagation();">
+		<section class="media" ng-click="createPlayer(song, $event.target); scrollView($event.target); $event.stopPropagation();">
 			<section class="controls">
 				<button type="button" ng-click="shift($index, $index-1); $event.stopPropagation();"><i class="fa fa-caret-up"></i></button>
 				<button type="button" ng-click="remove($index); $event.stopPropagation();"><i class="fa fa-times"></i></button>
@@ -35,23 +41,7 @@
 	</article>
 
 	<div class="code">
-		<span>{{ addingSong }}</span>
+		<span>{{ isSaved(); }}</span>
 	</div>
 
 </section>
-
-<modal show="modalShown">
-  	<form ng-submit="loginUser" class="login modal-form">
-  		<h3 class="title">Login</h3>
-		<input type="text" placeholder="Username" ng-model="loginUsername">
-		<input type="text" placeholder="Password" ng-model="loginPassword">
-		<button>Login</button>		
-	</form>
-	<form class="sign-up modal-form">
-		<h3 class="title">Create an Account</h3>
-		<input type="text" placeholder="Username">
-		<input type="text" placeholder="Email (optional)">
-		<input type="text" placeholder="Password">
-		<button>Create Account</button>		
-	</form>
-</modal>

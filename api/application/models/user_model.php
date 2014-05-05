@@ -2,64 +2,9 @@
 
 class User_model extends CI_Model {
 
-    // public function create($data) {
+    public function auth($name, $password) {
 
-    //     $this->db->insert('users', $data);
-
-    //     if ($this->db->affected_rows() > 0) {
-    //         return $this->db->insert_id();
-    //     } else {
-    //         return false;
-    //     }
-    // } 
-
-    // public function get($array) {
-
-    //     $this->db->select('id, email, permissions, created, updated');
-    //     $this->db->where($array);
-    //     $query = $this->db->get('users'); 
-
-    //     if ($query->num_rows() > 1) {
-
-    //         foreach ($query->result() as $row) {
-    //             $data[] = $row;
-    //         }
-
-    //         return $data;
-
-    //     } else {
-
-    //         $row = $query->row();
-
-    //         return $row;
-
-    //     }
-        
-    // }
-
-    // public function update($id, $data) {
-
-    //     $this->db->where('id', $id);
-    //     $this->db->update('users', $data);
-
-    //     if ($this->db->affected_rows() > 0) {
-    //         return true;
-    //     }
-    // } 
-
-    // public function delete($id) {
-
-    //     $this->db->where('id', $id);
-    //     $this->db->delete('mytable');
-
-    //     if ($this->db->affected_rows() > 0) {
-    //         return true;
-    //     }
-    // }
-
-    public function auth($email, $password) {
-
-        $this->db->where('email', $email);
+        $this->db->where('name', $name);
         $this->db->where('password', $password);
 
         $query = $this->db->get('users');
@@ -70,7 +15,7 @@ class User_model extends CI_Model {
 
             $cookie = array(
                 'id' => $row->id,
-                'email' => $row->email,
+                'name' => $row->name,
                 'logged_in' => true
             );
 

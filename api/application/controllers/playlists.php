@@ -50,6 +50,21 @@ class Playlists extends CI_Controller {
 
         }
 
+        // If the user is logged in associate the playlist with them
+
+        if ($this->User_model->is_authed()) {
+
+            $association = array(
+                'playlistId' => $playlist_id,
+                'userId' => $this->session->userdata('id'),
+                'userRole' => 'creator',
+                'created' => $current_time
+            );
+
+            $this->CRUD_model->create('playlist_users', $association);
+
+        }
+
         echo $hash;
 
     }

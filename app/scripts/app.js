@@ -6,10 +6,10 @@ angular.module('musicApp', [
 	'ngSanitize',
 	'ngRoute'
 ])
-.run(function($rootScope, $http, $location, userService){
+.run(function($rootScope, $http, $location, UserService){
 
 	// WHEN THE APP FIRST RUNS
-	userService.getUser()
+	UserService.getUser()
 		.then(function(callback){
 			$rootScope.User = callback;
 			$rootScope.isAuthed = true;
@@ -21,7 +21,7 @@ angular.module('musicApp', [
 	// WHEN EVER YOU GO TO A PAGE THAT IS RESTRICTED...
 	$rootScope.$on('$routeChangeStart', function(current, next) {
 		if (next.requireLogin) {
-			userService.getUser()
+			UserService.getUser()
 				.then(function(callback){
 					console.log(callback);
 					$rootScope.isAuthed = true;
@@ -39,6 +39,10 @@ angular.module('musicApp', [
 		.when('/new', {
 			templateUrl: 'views/playlist.html',
 			controller: 'PlaylistCtrl'
+		})
+		.when('/profile', {
+		  templateUrl: 'views/profile.html',
+		  controller: 'ProfileCtrl'
 		})
 		.when('/:hash', {
 			templateUrl: 'views/playlist.html',

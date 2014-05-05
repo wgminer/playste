@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('musicApp')
-  	.factory('userService', function ($http, $q, $location, UrlService) {
+  	.factory('UserService', function ($http, $q, $location, UrlService) {
 
   		var url = UrlService.apiUrl() + 'users';
   		
@@ -52,26 +52,11 @@ angular.module('musicApp')
 			return deferred.promise;
 		}
 
-		var unauthUser = function(credentials) {
+		var unauthUser = function() {
 
 			var deferred = $q.defer();
 
 			$http.post(url+'/unauth')
-				.success(function(data){
-					deferred.resolve(data);
-				})
-				.error(function(){
-					deferred.reject();
-				});
-
-			return deferred.promise;
-		}
-
-		var signOutUser = function() {
-
-			var deferred = $q.defer();
-
-			$http.post(url+'/signout')
 				.success(function(data){
 					deferred.resolve(data);
 				})

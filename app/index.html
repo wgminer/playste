@@ -20,13 +20,43 @@
 	<link rel="stylesheet" href="styles/main.css">
 	<!-- endbuild -->
 </head>
-<body ng-app="musicApp">
+<body ng-app="musicApp" ng-cloak  ng-class="{'no-scroll': (isLoginModalVisible || isCreateAccountModalVisible)}">
 	<!--[if lt IE 7]>
 		<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 	<![endif]-->
 
 	<!-- Add your site or application content here -->
 	<div ng-view=""></div>
+
+	<section class="modal" ng-controller="ModalCtrl" ng-show="isLoginModalVisible || isCreateAccountModalVisible">
+
+		<div class="modal-overlay" ng-click="hideModals()"></div>
+
+		<div class="modal-dialog">
+	    	<div class="modal-close" ng-click="hideModals()"><i class="fa fa-times"></i></div>
+
+	    	<form class="login modal-form" ng-show="isLoginModalVisible" ng-submit="loginUser(login)">
+		  		<h3 class="title">Login</h3>
+				<input type="text" placeholder="Username" ng-model="login.name">
+				<input type="text" placeholder="Password" ng-model="login.password">
+				<button>Login</button>		
+				<hr>
+				<p>Don't have an account? <a ng-click="toggleModal('createAccount')">Sign up today.</a></p>
+			</form>
+
+			<form class="sign-up modal-form" ng-show="isCreateAccountModalVisible" ng-submit="createUser(newUser)" >
+				<h3 class="title">Create an Account</h3>
+				<input type="text" placeholder="Username" ng-model="newUser.name">
+				<input type="text" placeholder="Email (optional)" ng-model="newUser.email">
+				<input type="text" placeholder="Password" ng-model="newUser.password">
+				<button>Create Account</button>		
+				<hr>
+				<p>Already have an account? <a ng-click="toggleModal('login')">Log in here.</a></p>
+			</form>
+
+		</div>
+	  	
+	</modal>
 
 	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
 	<script>
@@ -94,7 +124,8 @@
 		<script src="scripts/services/urlservice.js"></script>
 		<script src="scripts/services/underscore.js"></script>
 		<script src="scripts/services/userservice.js"></script>
-<script src="scripts/directives/modal.js"></script>
+		<script src="scripts/controllers/modal.js"></script>
+<script src="scripts/controllers/profile.js"></script>
 		<!-- endbuild -->
 		
 </body>

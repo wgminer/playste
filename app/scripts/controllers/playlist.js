@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('musicApp')
-  	.controller('PlaylistCtrl', function ($scope, $route, $routeParams, $timeout, $location, _, PlayerService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
+  	.controller('PlaylistCtrl', function ($scope, $rootScope, $route, $routeParams, $timeout, $location, _, PlayerService, UserService, PlaylistService, YoutubeAPI, SoundCloudAPI) {
 
   		// Masthead functions
   		
@@ -15,7 +15,7 @@ angular.module('musicApp')
   			var isSaved = false;
 
   			if ($scope.origPlaylist) {
-
+  				
 	  			if (angular.toJson($scope.origPlaylist.songs) == angular.toJson($scope.playlist.songs)) {
 	  				text = 'Saved';
 	  				isSaved = true;
@@ -24,6 +24,7 @@ angular.module('musicApp')
 	  		}
 
 	  		$scope.saveButtonText = text;
+
   			return isSaved;
 
   		}
@@ -231,15 +232,13 @@ angular.module('musicApp')
   		 * @param  {object} element
   		 * @return {undefined}
   		 */
- 		$scope.createPlayer = function(song, index, element) {
+ 		$scope.createPlayer = function(song, element) {
 
 			if (element.jquery) { // if jquery element
 				var $node = element.closest('.media');
 			} else {
 				var $node = $(element).closest('.media');
 			}
-
-    		song.index = index;
 
     		$('.media iframe').remove();
     		$('.playing').removeClass('playing');
@@ -362,6 +361,19 @@ angular.module('musicApp')
 		    $scope.modalShown = !$scope.modalShown;
 		};
 
+		$scope.toggleDropdown = function() {
+		    $scope.isDropdownVisible = !$scope.isDropdownVisible;
+		};
+
+		$scope.signOut = function() {
+			UserService.unauthUser()
+				.then(function(){
+					$location.url('/new');
+					$scope.isDropdownVisible = false;
+					$rootScope.isAuthed = false;
+				});
+		}
+
 
     	// Private Methods
     	
@@ -390,6 +402,8 @@ angular.module('musicApp')
 		 */
 		var init = function() {
 
+			 $scope.isDropdownVisible = false;
+
 			if ($routeParams.hash) {
 
 				// Get playlist from server
@@ -416,14 +430,21 @@ angular.module('musicApp')
 			 * @return {undefined}
 			 */
 			$scope.$watch(PlayerService.getPlayerStatus, function(status) {
-				$scope.playingStatus = status
+
+				$scope.playerStatus = status;
+
 				if (status === 0) {
-					var index = PlayerService.getPlayerData().index + 1;
+					
+					var sortOrder = parseInt(PlayerService.getPlayerData().sortOrder) + 1;
 					var $next = PlayerService.getPlayerElement()
 						.parent()
 						.next();
-					$scope.createPlayer($scope.playlist.songs[index], index, $next.children('.media'));
+
+					console.log($scope.playlist.songs[sortOrder], sortOrder);
+					
+					$scope.createPlayer($scope.playlist.songs[sortOrder], $next.children('.media'));
 				}
+
 			}, true);
 
 			/**
@@ -433,13 +454,6 @@ angular.module('musicApp')
 			 */
 			$scope.$watch(PlayerService.getPlayerData, function(data) {
 				$scope.playing = data;
-			}, true);
-
-			//Duplicate???
-			$scope.$watch(PlayerService.getPlayerStatus, function(status) {
-
-				$scope.playerStatus = status;
-
 			}, true);
 
 		}

@@ -85,10 +85,10 @@ class Users extends CI_Controller {
 
         $decoded_user = json_decode(file_get_contents('php://input'), TRUE);
 
-        $email = $decoded_user['email'];
+        $name = $decoded_user['name'];
         $password = md5($decoded_user['password']);
 
-        if ($cookie = $this->User_model->auth($email, $password)) {
+        if ($cookie = $this->User_model->auth($name, $password)) {
 
             echo json_encode($cookie);
 
