@@ -37,17 +37,32 @@ angular.module('musicApp')
 
   			console.log($scope.playlist);
 
+  			function createPlaylist(newPlaylist) {
+  				if (newPlaylist.length > 1) {
+
+		  			PlaylistService.createPlaylist(newPlaylist)
+		  				.then(function(callback){
+		  					console.log('new: ' + callback);
+		  					$location.path(callback);
+		  				}, function(error) {
+		  					console.log(error);
+		  				});
+
+		  		} else {
+		  			alert('You can\'t have a playlist with only one song!');
+		  		}
+  			}
+
   			// If playlist is NOT saved
   			if (!$scope.isSaved()) {
 
-	  			// If playlist exists just update it
+	  			// If playlist exists
 	  			if ($routeParams.hash) {
 
-	  				var updatedPlaylist = $scope.playlist.songs;
+	  				// is this an owner?
+	  				if ($rootScope.User && $scope.playlist.info.user && $rootScope.User.id == $scope.playlist.info.user) {
 
-		  			if (updatedPlaylist.length > 1) {
-
-			  			PlaylistService.updatePlaylist($routeParams.hash, updatedPlaylist)
+			  			PlaylistService.updatePlaylist($routeParams.hash, $scope.playlist.songs)
 			  				.then(function(callback){
 			  					console.log('updated: ' + callback);
 			  					$scope.origPlaylist = angular.copy($scope.playlist);
@@ -55,26 +70,17 @@ angular.module('musicApp')
 			  					console.log(error);
 			  				});
 
+			  		} else {
+
+						createPlaylist($scope.playlist.songs);
+
 			  		}
 
 	  			// Else create a new playlist	
 	  			} else {
 
-		  			var newPlaylist = $scope.playlist.songs;
+		  			createPlaylist($scope.playlist.songs);
 
-		  			if (newPlaylist.length > 1) {
-
-			  			PlaylistService.createPlaylist(newPlaylist)
-			  				.then(function(callback){
-			  					console.log('new: ' + callback);
-			  					$location.path(callback);
-			  				}, function(error) {
-			  					console.log(error);
-			  				});
-
-			  		} else {
-			  			alert('You can\'t have a playlist with only one song!');
-			  		}
 		  		}
 
 		  	}
@@ -409,6 +415,8 @@ angular.module('musicApp')
 				// Get playlist from server
 				PlaylistService.getPlaylist($routeParams.hash)
 					.then(function(playlist) {
+
+						console.log(playlist);
 
 						// Add playlist to scope
 						$scope.playlist = playlist;

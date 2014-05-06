@@ -44,27 +44,27 @@ class User_model extends CI_Model {
         }
     }
 
-    public function is_admin() {
+    // public function is_admin() {
         
-        if ($this->session->userdata('logged_in')) {
+    //     if ($this->session->userdata('logged_in')) {
 
-            $id = $this->session->userdata('id');
+    //         $name = $this->session->userdata($name);
 
-            if ($this->User_model->get(array('id' => $id, 'permissions' => 1))) {
+    //         if ($this->Crud_model->get(array('name' => 'admin'))) {
 
-                return true;
+    //             return true;
 
-            } else {
+    //         } else {
 
-                return false;
+    //             return false;
 
-            }
+    //         }
         
-        } else {
+    //     } else {
         
-            return false;
+    //         return false;
         
-        }
-    }
+    //     }
+    // }
 
 }

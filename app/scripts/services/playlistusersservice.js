@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('musicApp')
-	.factory('PlaylistService', function ($http, $q, UrlService) {
+	.factory('PlaylistUsersService', function ($http, $q, UrlService) {
 
 		var url = UrlService.apiUrl();
 
@@ -10,11 +10,11 @@ angular.module('musicApp')
 		 * @param  {object} newPlaylist
 		 * @return {undefined}
 		 */
-		var createPlaylist = function(newPlaylist) {
+		var addPlaylistUser = function(newPlaylist) {
 
 			var deferred = $q.defer();
 
-			$http.post(url+'playlists', newPlaylist)
+			$http.post(url+'playlistusers', newPlaylist)
 				.success(function(data){
 					deferred.resolve(data);
 				})
@@ -27,36 +27,15 @@ angular.module('musicApp')
 		}
 
 		/**
-		 * Grabs playlist fronm server
+		 * Grabs playlists from server
 		 * @param  {string} hash
 		 * @return {object}
 		 */
-		var getPlaylist = function(hash) {
+		var getPlaylistUsers = function(userId) {
 
 			var deferred = $q.defer();
 
-			$http.get(url+'playlists/'+hash)
-				.success(function(data){
-					deferred.resolve(data);
-				})
-				.error(function(){
-					deferred.reject();
-				});
-
-			return deferred.promise;
-
-		}
-
-		/**
-		 * Grabs playlist fronm server
-		 * @param  {string} hash
-		 * @return {object}
-		 */
-		var getUserPlaylists = function(userId) {
-
-			var deferred = $q.defer();
-
-			$http.get(url+'userplaylists/'+userId)
+			$http.get(url+'playlistusers/'+userId)
 				.success(function(data){
 					deferred.resolve(data);
 				})
@@ -74,11 +53,11 @@ angular.module('musicApp')
 		 * @param  {object} updatedPlaylist
 		 * @return {???}
 		 */
-		var updatePlaylist = function(hash, updatedPlaylist) {
+		var removePlaylistUser = function(hash, updatedPlaylist) {
 
 			var deferred = $q.defer();
 
-			$http.post(url+'playlists/'+hash, updatedPlaylist)
+			$http.post(url+'playlistusers/'+hash, updatedPlaylist)
 				.success(function(data){
 					deferred.resolve(data);
 				})
@@ -93,10 +72,9 @@ angular.module('musicApp')
 		// Public API
 
 		return {
-			createPlaylist: createPlaylist,
-			getPlaylist: getPlaylist,
-			getUserPlaylists: getUserPlaylists,
-			updatePlaylist: updatePlaylist
+			addPlaylistUser: addPlaylistUser,
+			getPlaylistUsers: getPlaylistUsers,
+			removePlaylistUser: removePlaylistUser
 		};
 
 	});

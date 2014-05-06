@@ -21,15 +21,38 @@ class CRUD_model extends CI_Model {
             $this->db->order_by('sortOrder', 'ASC');
         }
 
+        if ($table == 'users') {
+            $this->db->select('id, name, email, created, updated');
+        }
+
         $query = $this->db->get($table);
 
         if ($query->num_rows() == 1) {
 
-            return $query->row();
+            $row = $query->row();
+
+            if (isset($row->created)) {
+                $row->created = date(DATE_ISO8601, strtotime($row->created));
+            }
+
+            if (isset($row->updated)) {
+                $row->updated = date(DATE_ISO8601, strtotime($row->updated));
+            }
+
+            return $row;
         
         } else if ($query->num_rows() > 1) {
 
             foreach ($query->result() as $row) {
+
+                if (isset($row->created)) {
+                    $row->created = date(DATE_ISO8601, strtotime($row->created));
+                }
+
+                if (isset($row->updated)) {
+                    $row->updated = date(DATE_ISO8601, strtotime($row->updated));
+                }
+
                 $data[] = $row;
             }
 

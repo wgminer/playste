@@ -4,20 +4,12 @@ class Admin extends CI_Controller {
 
     public function index() {
 
-        $data['title'] = 'Channeltrak';
+        $data['title'] = 'Playste';
 
-        if ($this->User_model->is_admin()) {
-
-            redirect('dashboard');
-
-        } else {
-
-            $this->load->view('login', $data);
-
-        }
+        $this->load->view('login', $data);
 
     }
-
+/*
     public function login() {
 
         $email = $this->input->post('email');
@@ -71,5 +63,5 @@ class Admin extends CI_Controller {
         redirect('/', 'refresh');
 
     }
-
+*/
 }

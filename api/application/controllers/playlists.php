@@ -74,6 +74,10 @@ class Playlists extends CI_Controller {
         $data['info'] = $this->CRUD_model->get('playlists', array('hash' => $hash));
         $data['songs'] = $this->CRUD_model->get('songs', array('playlistId' => $data['info']->id));
 
+        if($associations = $this->CRUD_model->get('playlist_users', array('playlistId' => $data['info']->id))) {
+            $data['info']->users = $associations;
+        }
+
         echo json_encode($data);
 
     }
@@ -140,7 +144,7 @@ class Playlists extends CI_Controller {
 
         if ($this->User_model->is_admin()) {
 
-            if ($this->CRUD_model->delete($id)) {
+            if ($this->CRUD_model->delete('playlists', $id)) {
                 redirect('dashboard', 'refresh');
             }
 

@@ -238,6 +238,7 @@ img {
     }
 
     .dropdown {
+        background-color: #fff;
         border: 1px solid #ccc;
         position: absolute;
         top: 40px;
@@ -471,3 +472,30 @@ img {
 
 }
 
+.profile {
+    margin-top: 70px;
+
+    .wrap {
+        padding: 0 20px;
+    }
+}
+
+.playlists {
+    width: 75%;
+
+    th {
+        text-align: left;
+    }
+
+    th, td {
+        padding: 10px;
+    }
+
+    thead {
+        border-bottom: 2px solid #ccc;
+    }
+
+    tbody tr {
+        border-bottom: 1px solid #ccc;
+    }
+}

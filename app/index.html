@@ -38,7 +38,7 @@
 	    	<form class="login modal-form" ng-show="isLoginModalVisible" ng-submit="loginUser(login)">
 		  		<h3 class="title">Login</h3>
 				<input type="text" placeholder="Username" ng-model="login.name">
-				<input type="text" placeholder="Password" ng-model="login.password">
+				<input type="password" placeholder="Password" ng-model="login.password">
 				<button>Login</button>		
 				<hr>
 				<p>Don't have an account? <a ng-click="toggleModal('createAccount')">Sign up today.</a></p>
@@ -48,7 +48,7 @@
 				<h3 class="title">Create an Account</h3>
 				<input type="text" placeholder="Username" ng-model="newUser.name">
 				<input type="text" placeholder="Email (optional)" ng-model="newUser.email">
-				<input type="text" placeholder="Password" ng-model="newUser.password">
+				<input type="password" placeholder="Password" ng-model="newUser.password">
 				<button>Create Account</button>		
 				<hr>
 				<p>Already have an account? <a ng-click="toggleModal('login')">Log in here.</a></p>
@@ -124,8 +124,9 @@
 		<script src="scripts/services/urlservice.js"></script>
 		<script src="scripts/services/underscore.js"></script>
 		<script src="scripts/services/userservice.js"></script>
+		<script src="scripts/services/playlistusersservice.js"></script>
 		<script src="scripts/controllers/modal.js"></script>
-<script src="scripts/controllers/profile.js"></script>
+		<script src="scripts/controllers/profile.js"></script>
 		<!-- endbuild -->
 		
 </body>

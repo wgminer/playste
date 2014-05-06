@@ -64,5 +64,11 @@ $route['playlists/(:any)'] = ($_SERVER['REQUEST_METHOD'] == 'GET') ? 'playlists/
 $route['songs'] = ($_SERVER['REQUEST_METHOD'] == 'GET') ? 'songs/index' : 'songs/create';
 $route['songs/(:any)'] = ($_SERVER['REQUEST_METHOD'] == 'GET') ? 'songs/get/$1' : 'songs/update/$1';
 
+// USER PLAYLISTS ROUTES
+
+$route['playlistusers/add'] = 'playlistusers/add';
+$route['playlistusers/remove'] = 'playlistusers/remove';
+$route['playlistusers/(:num)'] = 'playlistusers/get/$1';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

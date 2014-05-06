@@ -31,11 +31,12 @@ angular.module('musicApp')
                         .then(function(callback){
                             $rootScope.User = callback;
                             $rootScope.isAuthed = true;
+                            $scope.login = '';
                             console.log(callback);
                         },function(error){
                             $rootScope.isAuthed = false;
                         });
-                    
+
                 }, function(callback){
                     console.log('error: ' + callback);
                 });
@@ -48,7 +49,7 @@ angular.module('musicApp')
                 .then(function(callback){
                     console.log('success: ' + callback);
                     $scope.hideModals();
-                    $scope.$apply();
+                    $scope.newUser = '';
                 }, function(callback){
                     console.log('error: ' + callback);
                 });
