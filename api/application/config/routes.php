@@ -46,12 +46,13 @@ $route['404_override'] = '';
 $route['dashboard'] = 'admin/dashboard';
 
 // USER ROUTES
- 
+
+$route['users/getAuthed'] = 'users/getAuthed'; 
 $route['users/auth'] = 'users/auth';
 $route['users/unauth'] = 'users/unauth';
 
 $route['users'] = ($_SERVER['REQUEST_METHOD'] == 'GET') ? 'users/get' : 'users/create';
-$route['users/(:num)'] = ($_SERVER['REQUEST_METHOD'] == 'GET') ? 'users/get/$1' : 'users/update/$1';
+$route['users/(:any)'] = ($_SERVER['REQUEST_METHOD'] == 'GET') ? 'users/get/$1' : 'users/update/$1';
 
 // PLAYLIST ROUTES 
 

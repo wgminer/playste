@@ -9,11 +9,11 @@ angular.module('musicApp', [
 .run(function($rootScope, $http, $location, UserService){
 
 	// WHEN THE APP FIRST RUNS
-	UserService.getUser()
+	UserService.getAuthedUser()
 		.then(function(callback){
 			$rootScope.User = callback;
 			$rootScope.isAuthed = true;
-			console.log(callback);
+			console.log('logged in as: ' + $rootScope.User.name);
 		},function(error){
 			$rootScope.isAuthed = false;
 		});
@@ -21,7 +21,7 @@ angular.module('musicApp', [
 	// WHEN EVER YOU GO TO A PAGE THAT IS RESTRICTED...
 	$rootScope.$on('$routeChangeStart', function(current, next) {
 		if (next.requireLogin) {
-			UserService.getUser()
+			UserService.getAuthedUser()
 				.then(function(callback){
 					console.log(callback);
 					$rootScope.isAuthed = true;
@@ -40,9 +40,9 @@ angular.module('musicApp', [
 			templateUrl: 'views/playlist.html',
 			controller: 'PlaylistCtrl'
 		})
-		.when('/profile', {
-		  templateUrl: 'views/profile.html',
-		  controller: 'ProfileCtrl'
+		.when('/user/:name', {
+		  templateUrl: 'views/user.html',
+		  controller: 'UserCtrl'
 		})
 		.when('/:hash', {
 			templateUrl: 'views/playlist.html',

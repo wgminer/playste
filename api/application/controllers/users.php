@@ -31,22 +31,11 @@ class Users extends CI_Controller {
 
     }
 
-    public function get() {
+    public function get($name) {
 
-        if ($this->User_model->is_authed()) {
+        $data = $this->CRUD_model->get('users', array('name' => $name));
 
-            $id = $this->session->userdata('id');
-
-            $data = $this->CRUD_model->get('users', array('id' => $id));
-
-            echo json_encode($data);
-
-        } else {
-
-            // Unauthorized
-            header('HTTP', TRUE, 401);
-
-        }
+        echo json_encode($data);
 
     }
 
@@ -71,6 +60,25 @@ class Users extends CI_Controller {
             } else {
                 header('HTTP', TRUE, 401);
             }
+
+        } else {
+
+            // Unauthorized
+            header('HTTP', TRUE, 401);
+
+        }
+
+    }
+
+    public function getAuthed() {
+
+        if ($this->User_model->is_authed()) {
+
+            $id = $this->session->userdata('id');
+
+            $data = $this->CRUD_model->get('users', array('id' => $id));
+
+            echo json_encode($data);
 
         } else {
 

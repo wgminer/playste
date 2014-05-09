@@ -16,7 +16,7 @@
 			<button ng-click="toggleModal('login')" ng-show="!isAuthed" class="login">Log In</button>
 			<button ng-show="isAuthed" ng-click="toggleDropdown()" class="account">{{ User.name }} <i class="fa" ng-class="{'fa-caret-down': !isDropdownVisible, 'fa-caret-up': isDropdownVisible}"></i></button>
 			<div class="dropdown" ng-show="isDropdownVisible">
-				<a href="#/profile">Profile</a>
+				<a ng-href="#/user/{{ User.name }}">Profile</a>
 				<a href="#/help">Help</a>
 				<a ng-click="signOut()">Sign Out</a>
 			</div>
@@ -37,6 +37,7 @@
 		</section>
 		<section class="caption">
 			<h2 ng-bind="song.title"></h2>
+			<h3 ng-bind="song.name"></h3>
 		</section>
 	</article>
 

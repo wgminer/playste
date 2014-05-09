@@ -21,11 +21,27 @@ angular.module('musicApp')
 
 		}
 
-		var getUser = function(){
+		var getAuthedUser = function(){
 
 			var deferred = $q.defer();
 
-			$http.get(url)
+			$http.get(url+'/getAuthed')
+				.success(function(data){
+					deferred.resolve(data);
+				})
+				.error(function(){
+					deferred.reject();
+				});
+
+			return deferred.promise;
+		
+		};
+
+		var getUser = function(name){
+
+			var deferred = $q.defer();
+
+			$http.get(url + '/' + name)
 				.success(function(data){
 					deferred.resolve(data);
 				})
@@ -72,6 +88,7 @@ angular.module('musicApp')
 		return {
 			createUser: createUser,
 			getUser: getUser,
+			getAuthedUser: getAuthedUser,
 			authUser: authUser,
 			unauthUser: unauthUser
 		};

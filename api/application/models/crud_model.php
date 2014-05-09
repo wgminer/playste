@@ -19,6 +19,8 @@ class CRUD_model extends CI_Model {
 
         if ($table == 'songs') {
             $this->db->order_by('sortOrder', 'ASC');
+            $this->db->join('users', 'users.id = songs.userId ');
+            $this->db->select('songs.id, songs.title, songs.image, songs.url, songs.source, songs.sourceId, songs.playlistId, songs.sortOrder, songs.created, songs.updated, users.name');
         }
 
         if ($table == 'users') {

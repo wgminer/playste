@@ -24,11 +24,31 @@ class Playlists extends CI_Controller {
 
         $playlist_id = $this->CRUD_model->create('playlists', $new_playlist);
 
+        // If the user is logged in associate the playlist with them
+
+        if ($this->User_model->is_authed()) {
+
+            $userId = $this->session->userdata('id');
+
+            $association = array(
+                'playlistId' => $playlist_id,
+                'userId' => $userId,
+                'userRole' => 'creator',
+                'created' => $current_time
+            );
+
+            $this->CRUD_model->create('playlist_users', $association);
+
+        } else {
+            $userId = 0; // Anon user
+        }
+
         // Create and associate the songs with new playlist
 
         $playlist_songs = json_decode(file_get_contents('php://input'), TRUE);
 
         $index = 0;
+
         foreach ($playlist_songs as $song) {
 
             $new_song = array(
@@ -37,7 +57,7 @@ class Playlists extends CI_Controller {
                 'url' => $song['url'],
                 'source' => $song['source'],
                 'sourceId' => $song['sourceId'],
-                'userId' => 1, // Stub
+                'userId' => $userId,
                 'playlistId' => $playlist_id,
                 'sortOrder' => $index,
                 'created' => $current_time,
@@ -50,21 +70,7 @@ class Playlists extends CI_Controller {
 
         }
 
-        // If the user is logged in associate the playlist with them
-
-        if ($this->User_model->is_authed()) {
-
-            $association = array(
-                'playlistId' => $playlist_id,
-                'userId' => $this->session->userdata('id'),
-                'userRole' => 'creator',
-                'created' => $current_time
-            );
-
-            $this->CRUD_model->create('playlist_users', $association);
-
-        }
-
+        // Return the new hash
         echo $hash;
 
     }
@@ -74,7 +80,7 @@ class Playlists extends CI_Controller {
         $data['info'] = $this->CRUD_model->get('playlists', array('hash' => $hash));
         $data['songs'] = $this->CRUD_model->get('songs', array('playlistId' => $data['info']->id));
 
-        if($associations = $this->CRUD_model->get('playlist_users', array('playlistId' => $data['info']->id))) {
+        if ($associations = $this->CRUD_model->get('playlist_users', array('playlistId' => $data['info']->id))) {
             $data['info']->users = $associations;
         }
 
@@ -84,60 +90,67 @@ class Playlists extends CI_Controller {
 
     public function update($hash) {
 
-        $playlist = $this->CRUD_model->get('playlists', array('hash' => $hash));
-        $playlist_id = $playlist->id; 
+        if ($this->User_model->is_authed()) {
 
-        $current_time = date('Y-m-d H:i:s');
+            $playlist = $this->CRUD_model->get('playlists', array('hash' => $hash));
+            $playlist_id = $playlist->id; 
 
-        // Update playlist 'updated' 
+            $current_time = date('Y-m-d H:i:s');
 
-        $updated_playlist = array(
-            'updated' => $current_time
-        );
+            // Update playlist 'updated' 
 
-        $this->CRUD_model->update('playlists', array('id' => $playlist_id), $updated_playlist);
+            $updated_playlist = array(
+                'updated' => $current_time
+            );
 
-        // Create and associate the songs with new playlist
+            $this->CRUD_model->update('playlists', array('id' => $playlist_id), $updated_playlist);
 
-        $playlist = json_decode(file_get_contents('php://input'), TRUE);
+            // Create and associate the songs with new playlist
 
-        $index = 0;
-        foreach ($playlist as $song) {
+            $playlist = json_decode(file_get_contents('php://input'), TRUE);
 
-            // If it's a existing song
-            if (isset($song['id'])) {
+            $index = 0;
 
-                $updated_song = array(
-                    'sortOrder' => $index,
-                    'updated' => $current_time
-                );
+            foreach ($playlist as $song) {
 
-                $this->CRUD_model->update('songs', array('id' => $song['id']), $updated_song);
+                // If it's a existing song
+                if (isset($song['id'])) {
 
-            } else {
+                    $updated_song = array(
+                        'sortOrder' => $index,
+                        'updated' => $current_time
+                    );
 
-                $new_song = array(
-                    'title' => $song['title'],
-                    'image' => $song['image'],
-                    'url' => $song['url'],
-                    'source' => $song['source'],
-                    'sourceId' => $song['sourceId'],
-                    'userId' => 1, // Stub
-                    'playlistId' => $playlist_id,
-                    'sortOrder' => $index,
-                    'created' => $current_time,
-                    'updated' => $current_time
-                );
+                    $this->CRUD_model->update('songs', array('id' => $song['id']), $updated_song);
 
-                $this->CRUD_model->create('songs', $new_song);
+                } else {
 
+                    $new_song = array(
+                        'title' => $song['title'],
+                        'image' => $song['image'],
+                        'url' => $song['url'],
+                        'source' => $song['source'],
+                        'sourceId' => $song['sourceId'],
+                        'userId' => $this->session->userdata('id'), // Stub
+                        'playlistId' => $playlist_id,
+                        'sortOrder' => $index,
+                        'created' => $current_time,
+                        'updated' => $current_time
+                    );
+
+                    $this->CRUD_model->create('songs', $new_song);
+
+                }
+
+                $index++;
+                
             }
 
-            $index++;
-            
-        }
+            echo $hash;
 
-        echo $hash;
+        } else {
+            header('HTTP', TRUE, 401);
+        }
     }
 
     public function delete($id) {

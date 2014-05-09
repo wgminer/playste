@@ -25,14 +25,14 @@ angular.module('musicApp')
 
             UserService.authUser(credentials)
                 .then(function(callback){
+                    
                     $scope.hideModals();
 
-                    UserService.getUser()
+                    UserService.getAuthedUser()
                         .then(function(callback){
                             $rootScope.User = callback;
                             $rootScope.isAuthed = true;
                             $scope.login = '';
-                            console.log(callback);
                         },function(error){
                             $rootScope.isAuthed = false;
                         });

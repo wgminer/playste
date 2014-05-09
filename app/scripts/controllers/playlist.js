@@ -35,14 +35,11 @@ angular.module('musicApp')
   		 */
   		$scope.savePlaylist = function() {
 
-  			console.log($scope.playlist);
-
   			function createPlaylist(newPlaylist) {
   				if (newPlaylist.length > 1) {
 
 		  			PlaylistService.createPlaylist(newPlaylist)
 		  				.then(function(callback){
-		  					console.log('new: ' + callback);
 		  					$location.path(callback);
 		  				}, function(error) {
 		  					console.log(error);
@@ -59,8 +56,10 @@ angular.module('musicApp')
 	  			// If playlist exists
 	  			if ($routeParams.hash) {
 
+	  				// console.log($rootScope.User, $scope.playlist.info.users, checkUsers($rootScope.User.id, $scope.playlist.info.users));
+
 	  				// is this an owner?
-	  				if ($rootScope.User && $scope.playlist.info.user && $rootScope.User.id == $scope.playlist.info.user) {
+	  				if ($rootScope.User && $scope.playlist.info.users && checkUsers($rootScope.User.id, $scope.playlist.info.users)) {
 
 			  			PlaylistService.updatePlaylist($routeParams.hash, $scope.playlist.songs)
 			  				.then(function(callback){
@@ -94,6 +93,15 @@ angular.module('musicApp')
   		 */
 		$scope.addSong = function(url) {
 
+			function userName() {
+
+  				if ($rootScope.User.name) {
+  					return $rootScope.User.name;
+  				} else {
+  					return 'Anonymous';
+  				}
+  			}
+
 			if (!$scope.addingSong) {
 
 				$scope.origPlaylist = angular.copy($scope.origPlaylist);
@@ -122,6 +130,7 @@ angular.module('musicApp')
 		  						url: 'https://www.youtube.com/watch?v='+data.items[0].id,
 		  						source: 'youtube',
 		  						sourceId: data.items[0].id,
+		  						name: userName()
 		  					}
 
 		  					$scope.addingSong = 'finish';
@@ -155,6 +164,7 @@ angular.module('musicApp')
 		  						url: data.permalink_url,
 		  						source: 'soundcloud',
 		  						sourceId: data.id,
+		  						name: userName()
 		  					}
 
 		  					$scope.addingSong = 'finish';
@@ -318,15 +328,15 @@ angular.module('musicApp')
     	 */
     	$scope.scrollView = function(element) {
 
-    		if (element.jquery) { // if jquery element
-				var $song = element.closest('.song');
-			} else {
-				var $song = $(element).closest('.song');
-			}
+   //  		if (element.jquery) { // if jquery element
+			// 	var $song = element.closest('.song');
+			// } else {
+			// 	var $song = $(element).closest('.song');
+			// }
 
-			var offset = $song.offset().top;
-			$('html, body').scrollTop(offset-100);
-			console.log(offset);
+			// var offset = $song.offset().top;
+			// $('html, body').scrollTop(offset-100);
+			// console.log(offset);
 
     	}
 
@@ -383,6 +393,33 @@ angular.module('musicApp')
 
     	// Private Methods
     	
+    	var checkUsers = function(userId, users) {
+
+    		if (Array.isArray(users)) {
+
+				for (var i = 0; i < users.length; i++) {
+
+	    			console.log(userId, users[i].userId);
+
+	    			if (userId == users[i].userId) {
+	    				return true;
+	    			}
+	    		}
+
+	    		return false;
+
+			} else {
+
+				if (userId == users.userId) {
+    				return true;
+    			} else {
+    				return false;
+    			}
+
+			}
+
+    	}
+    	
 		/**
 		 * When YT player is ready
 		 * @param  {???} event
@@ -408,7 +445,7 @@ angular.module('musicApp')
 		 */
 		var init = function() {
 
-			 $scope.isDropdownVisible = false;
+			$scope.isDropdownVisible = false;
 
 			if ($routeParams.hash) {
 
@@ -416,7 +453,7 @@ angular.module('musicApp')
 				PlaylistService.getPlaylist($routeParams.hash)
 					.then(function(playlist) {
 
-						console.log(playlist);
+						console.log(playlist.info.users);
 
 						// Add playlist to scope
 						$scope.playlist = playlist;
