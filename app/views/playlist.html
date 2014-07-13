@@ -37,7 +37,7 @@
 		</section>
 		<section class="caption">
 			<h2 ng-bind="song.title"></h2>
-			<h3 ng-bind="song.name"></h3>
+			<p class="meta"><a ng-href="#/user/{{ song.name }}">{{ song.name }}</a><span ng-show="song.created"> <span class="divider">&bull;</span>  <span>Added <span am-time-ago="song.created"></span></span></p>
 		</section>
 	</article>
 

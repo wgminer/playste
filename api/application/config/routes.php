@@ -58,6 +58,7 @@ $route['users/(:any)'] = ($_SERVER['REQUEST_METHOD'] == 'GET') ? 'users/get/$1' 
 
 $route['playlists'] = ($_SERVER['REQUEST_METHOD'] == 'GET') ? 'playlists/index' : 'playlists/create';
 $route['playlists/test'] = 'playlists/test';
+$route['playlists/delete/(:any)'] = 'playlists/delete/$1';
 $route['playlists/(:any)'] = ($_SERVER['REQUEST_METHOD'] == 'GET') ? 'playlists/get/$1' : 'playlists/update/$1';
 
 // SONGS ROUTES 

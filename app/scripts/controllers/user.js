@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('musicApp')
-  	.controller('UserCtrl', function ($scope, $rootScope, $routeParams, $location, UserService, PlaylistUsersService) {
+  	.controller('UserCtrl', function ($scope, $rootScope, $routeParams, $location, UserService, PlaylistUsersService, PlaylistService) {
 
 		$scope.toggleLoginModal = function() {
 		    $scope.modalShown = !$scope.modalShown;
@@ -28,12 +28,18 @@ angular.module('musicApp')
 					.then(function(user){
 
 						PlaylistUsersService.getPlaylistUsers(user.id)
-							.then(function(playlists){								
-								if (Array.isArray(playlists)) {
-									$scope.playlists = playlists;
+							.then(function(playlists){
+
+								if (playlists != 'false') {							
+									if (Array.isArray(playlists)) {
+										$rootScope.playlists = playlists;
+									} else {
+										$rootScope.playlists = [playlists];
+									}
 								} else {
-									$scope.playlists = [playlists];
+									$rootScope.playlists = false;
 								}
+
 							}, function(){
 
 							});

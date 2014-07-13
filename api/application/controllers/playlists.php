@@ -77,14 +77,17 @@ class Playlists extends CI_Controller {
 
     public function get($hash) {
 
-        $data['info'] = $this->CRUD_model->get('playlists', array('hash' => $hash));
-        $data['songs'] = $this->CRUD_model->get('songs', array('playlistId' => $data['info']->id));
+        if ($data['info'] = $this->CRUD_model->get('playlists', array('hash' => $hash))) {
+            $data['songs'] = $this->CRUD_model->get('songs', array('playlistId' => $data['info']->id));
 
-        if ($associations = $this->CRUD_model->get('playlist_users', array('playlistId' => $data['info']->id))) {
-            $data['info']->users = $associations;
+            if ($associations = $this->CRUD_model->get('playlist_users', array('playlistId' => $data['info']->id))) {
+                $data['info']->users = $associations;
+            }
+
+            echo json_encode($data);
+        } else {
+            header('HTTP', TRUE, 404);
         }
-
-        echo json_encode($data);
 
     }
 
@@ -155,12 +158,19 @@ class Playlists extends CI_Controller {
 
     public function delete($id) {
 
-        if ($this->User_model->is_admin()) {
+        if ($this->User_model->is_authed()) {
 
-            if ($this->CRUD_model->delete('playlists', $id)) {
-                redirect('dashboard', 'refresh');
+            $playlist = $this->Playlist_model->getPlaylists(array('playlists.id' => $id, 'users.name' =>$this->session->userdata('name')));
+
+            if ($playlist->userRole == 'creator') {
+                $this->CRUD_model->delete('playlists', array('id' => $id));
+                $this->CRUD_model->delete('songs', array('playlistId' => $id));
+                $this->CRUD_model->delete('playlist_users', array('playlistId' => $id));
+            } else {
+                header('HTTP', TRUE, 401);
             }
-
+        } else {
+            header('HTTP', TRUE, 401);
         }
     }
 

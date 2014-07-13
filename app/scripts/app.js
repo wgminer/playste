@@ -4,7 +4,8 @@ angular.module('musicApp', [
 	'ngCookies',
 	'ngResource',
 	'ngSanitize',
-	'ngRoute'
+	'ngRoute',
+	'angularMoment'
 ])
 .run(function($rootScope, $http, $location, UserService){
 
@@ -43,6 +44,10 @@ angular.module('musicApp', [
 		.when('/user/:name', {
 		  templateUrl: 'views/user.html',
 		  controller: 'UserCtrl'
+		})
+		.when('/sorry', {
+		  templateUrl: 'views/sorry.html',
+		  controller: 'SorryCtrl'
 		})
 		.when('/:hash', {
 			templateUrl: 'views/playlist.html',

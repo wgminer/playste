@@ -76,9 +76,9 @@ class CRUD_model extends CI_Model {
         }
     } 
 
-    public function delete($table, $id) {
+    public function delete($table, $match) {
 
-        $this->db->where('channel_id', $id);
+        $this->db->where($match);
         $this->db->delete($table); 
 
         if ($this->db->affected_rows() > 0) {

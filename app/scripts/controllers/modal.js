@@ -1,24 +1,32 @@
 'use strict';
 
 angular.module('musicApp')
-  	.controller('ModalCtrl', function ($scope, $rootScope, $route, $routeParams, $timeout, $location, UserService) {
+  	.controller('ModalCtrl', function ($scope, $rootScope, $route, $routeParams, $timeout, $location, UserService, PlaylistService) {
 
-        $rootScope.toggleModal = function(name) {
+        $rootScope.toggleModal = function(name, data1, data2) {
+
+            $scope.hideModals();
+            console.log(name);
 
             if ( name == 'login') {
-                console.log(name);
-                $scope.isCreateAccountModalVisible = false;
                 $scope.isLoginModalVisible = !$scope.isLoginModalVisible;
             } else if ( name == 'createAccount') {
-                $scope.isLoginModalVisible = false;
                 $scope.isCreateAccountModalVisible = !$scope.isCreateAccountModalVisible;
+            } else if ( name == 'share') {
+                $scope.isShareModalVisible = !$scope.isShareModalVisible;
+            } else if ( name == 'delete') {
+                $scope.isDeleteModalVisible = !$scope.isDeleteModalVisible;
+                $scope.deletedPlaylist = data1;
+                $scope.deletedPlaylistIndex = data2;
             }
 
         }
 
   		$scope.hideModals = function() {
-            $scope.isCreateAccountModalVisible,
+            $scope.isCreateAccountModalVisible = false;
             $scope.isLoginModalVisible = false;
+            $scope.isDeleteModalVisible = false;
+            $scope.isShareModalVisible = false;
         };
 
         $scope.loginUser = function(credentials) {
@@ -54,6 +62,18 @@ angular.module('musicApp')
                     console.log('error: ' + callback);
                 });
 
+        }
+
+        $scope.deletePlaylist = function() {
+            PlaylistService.deletePlaylist($scope.deletedPlaylist.id)
+                .then(function(){
+                    $rootScope.playlists.splice($scope.deletedPlaylistIndex, 1);
+                    console.log('deleted: ' + $scope.deletedPlaylist);
+                    $scope.hideModals();
+                }, function(callback){
+                    console.log('error!');
+                    $scope.hideModals();
+                })
         }
 
 		var init = function() {

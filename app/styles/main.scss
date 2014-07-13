@@ -79,9 +79,27 @@ img {
 }
 
 .button {
+    color: #333;
+    display: inline-block;
     background-color: transparent;
     border: 0;
     line-height: 40px;
+    font-size: .875em;
+    margin: 0;
+    padding: 0 20px;
+    outline: none;
+    border: 1px solid #ccc;
+    text-align: center;
+
+    &:hover {
+        color: #333;
+        background-color: #eee;
+    }
+    
+    &:active {
+        border: 1px solid $primary-color;
+    }
+
 }
 
 .lead {
@@ -101,6 +119,9 @@ img {
 
     &:hover {
         background-color: rgba(#fff, 1);
+        .dropdown {
+            background-color: rgba(#fff, 1);
+        }
     }
 
     h1 {
@@ -238,7 +259,8 @@ img {
     }
 
     .dropdown {
-        background-color: #fff;
+        @include transition(background-color .25s ease);
+        background-color: rgba(#fff, .8);
         border: 1px solid #ccc;
         position: absolute;
         top: 40px;
@@ -279,6 +301,8 @@ img {
     }
 
     .media {
+        box-shadow: 0 1px 16px rgba(0,0,0,.1);
+        border: 1px solid #ccc;
         background-color: #000;
         cursor: pointer;
         position: relative;
@@ -286,7 +310,7 @@ img {
     }
 
     .caption {
-        padding: 10px 0;
+        padding: 20px 0;
     }
 
     .controls {
@@ -321,6 +345,17 @@ img {
         @extend .ellipsis;
         font-weight: 400;
         margin: 0;
+        line-height: 1;
+        margin: 0 0 2px;
+    }
+
+    .meta {
+        color: #999;
+        margin: 0;
+    }
+
+    .divider {
+        margin: 0 3px;
     }
 
     iframe {
@@ -370,7 +405,7 @@ img {
         }
 
         .caption {
-            padding: 10px 20px;
+            padding: 20px;
         }
 
         img {
@@ -446,7 +481,7 @@ img {
     }
 
     button {
-        display: block;
+        display: inline-block;
         border: 1px solid #ccc;
         background-color: #eee;
         padding: 8px 20px;
@@ -461,6 +496,14 @@ img {
     }
 
     p {
+        margin-bottom: 10px;
+    }
+
+    ul {
+        margin: 0 0 20px;
+    }
+
+    .alt-option {
         margin: 0;
         text-align: center;
 
@@ -485,7 +528,12 @@ img {
 }
 
 .playlists {
+    float: left;
     width: 75%;
+
+    table {
+        width: 100%;
+    }
 
     th {
         text-align: left;
@@ -502,4 +550,25 @@ img {
     tbody tr {
         border-bottom: 1px solid #ccc;
     }
+
+    .actions {
+        text-align: right;
+    }
+
+    a.button {
+        margin: 40px auto 0;
+        width: 200px;
+        display: block;
+    }
+}
+
+.user {
+    float: left;
+    width: 25%;
+}
+
+.alert {
+    background-color: $secondary-color;
+    color: #fff;
+    padding: 20px;
 }

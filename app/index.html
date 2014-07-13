@@ -2,7 +2,7 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" ng-app="musicApp"> <!--<![endif]-->
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,7 +20,7 @@
 	<link rel="stylesheet" href="styles/main.css">
 	<!-- endbuild -->
 </head>
-<body ng-app="musicApp" ng-cloak  ng-class="{'no-scroll': (isLoginModalVisible || isCreateAccountModalVisible)}">
+<body ng-class="{'no-scroll': (isLoginModalVisible || isCreateAccountModalVisible)}">
 	<!--[if lt IE 7]>
 		<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 	<![endif]-->
@@ -28,7 +28,7 @@
 	<!-- Add your site or application content here -->
 	<div ng-view=""></div>
 
-	<section class="modal" ng-controller="ModalCtrl" ng-show="isLoginModalVisible || isCreateAccountModalVisible">
+	<section class="modal" ng-controller="ModalCtrl" ng-show="isLoginModalVisible || isCreateAccountModalVisible || isShareModalVisible || isDeleteModalVisible">
 
 		<div class="modal-overlay" ng-click="hideModals()"></div>
 
@@ -36,12 +36,12 @@
 	    	<div class="modal-close" ng-click="hideModals()"><i class="fa fa-times"></i></div>
 
 	    	<form class="login modal-form" ng-show="isLoginModalVisible" ng-submit="loginUser(login)">
-		  		<h3 class="title">Login</h3>
+		  		<h3 class="title">Login to Playste</h3>
 				<input type="text" placeholder="Username" ng-model="login.name">
 				<input type="password" placeholder="Password" ng-model="login.password">
 				<button>Login</button>		
 				<hr>
-				<p>Don't have an account? <a ng-click="toggleModal('createAccount')">Sign up today.</a></p>
+				<p class="alt-option">Don't have an account? <a ng-click="toggleModal('createAccount')">Sign up today.</a></p>
 			</form>
 
 			<form class="sign-up modal-form" ng-show="isCreateAccountModalVisible" ng-submit="createUser(newUser)" >
@@ -51,7 +51,27 @@
 				<input type="password" placeholder="Password" ng-model="newUser.password">
 				<button>Create Account</button>		
 				<hr>
-				<p>Already have an account? <a ng-click="toggleModal('login')">Log in here.</a></p>
+				<p class="alt-option">Already have an account? <a ng-click="toggleModal('login')">Log in here.</a></p>
+			</form>
+
+			<form class="share modal-form" ng-show="isShareModalVisible" ng-submit="sharePlaylist(people)" >
+				<h3 class="title">Sharing is caring!</h3>
+				<textarea name="" id="" cols="30" rows="10"></textarea>
+				<hr>
+				<button>Send Invites</button>
+				<button ng-click="hideModals()">Cancel</button>	
+			</form>
+
+			<form class="delete modal-form" ng-show="isDeleteModalVisible" ng-submit="deletePlaylist(playlist)">
+				<div class="alert">Watch out! Danger zone ahead.</div>
+				<p><strong>Are you sure you want to delete your playlist "{{ deletedPlaylist.hash }}"</strong></p>
+				<ul>
+					<li>All the users you've shared it with will lose access</li>
+					<li>This action cannot be undone</li>
+				</ul>
+				<hr>
+				<button ng-click="deletePlaylist()">Yes, Delete</button>
+				<button ng-click="hideModals()">Cancel</button>		
 			</form>
 
 		</div>
@@ -107,6 +127,8 @@
 	<script src="bower_components/masonry/masonry.js"></script>
 	<script src="bower_components/angular-animate/angular-animate.js"></script>
 	<script src="bower_components/underscore/underscore.js"></script>
+	<script src="bower_components/moment/moment.js"></script>
+	<script src="bower_components/angular-moment/angular-moment.js"></script>
 	<!-- endbower -->
 	<!-- endbuild -->
 
@@ -127,6 +149,7 @@
 		<script src="scripts/services/playlistusersservice.js"></script>
 		<script src="scripts/controllers/modal.js"></script>
 		<script src="scripts/controllers/user.js"></script>
+<script src="scripts/controllers/sorry.js"></script>
 		<!-- endbuild -->
 		
 </body>

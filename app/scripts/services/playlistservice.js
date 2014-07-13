@@ -90,13 +90,30 @@ angular.module('musicApp')
 
 		}
 
+		var deletePlaylist = function(id) {
+
+			var deferred = $q.defer();
+
+			$http.post(url+'playlists/delete/'+id)
+				.success(function(data){
+					deferred.resolve(data);
+				})
+				.error(function(){
+					deferred.reject();
+				});
+
+			return deferred.promise;
+
+		}
+
 		// Public API
 
 		return {
 			createPlaylist: createPlaylist,
 			getPlaylist: getPlaylist,
 			getUserPlaylists: getUserPlaylists,
-			updatePlaylist: updatePlaylist
+			updatePlaylist: updatePlaylist,
+			deletePlaylist: deletePlaylist
 		};
 
 	});

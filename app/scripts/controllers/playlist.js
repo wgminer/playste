@@ -95,7 +95,7 @@ angular.module('musicApp')
 
 			function userName() {
 
-  				if ($rootScope.User.name) {
+  				if ($rootScope.User) {
   					return $rootScope.User.name;
   				} else {
   					return 'Anonymous';
@@ -373,9 +373,6 @@ angular.module('musicApp')
 
     	}
 
-    	$scope.toggleLoginModal = function() {
-		    $scope.modalShown = !$scope.modalShown;
-		};
 
 		$scope.toggleDropdown = function() {
 		    $scope.isDropdownVisible = !$scope.isDropdownVisible;
@@ -453,13 +450,16 @@ angular.module('musicApp')
 				PlaylistService.getPlaylist($routeParams.hash)
 					.then(function(playlist) {
 
-						console.log(playlist.info.users);
+						console.log(playlist);
 
 						// Add playlist to scope
 						$scope.playlist = playlist;
 
 						// Create copy to compare changes against later
 						$scope.origPlaylist = angular.copy($scope.playlist);
+					}, function() {
+						// returns a 404
+						$location.url('/sorry');
 					});
 
 			} else {

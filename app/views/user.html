@@ -17,35 +17,36 @@
 <section class="profile">
 
 	<div class="wrap">
-
-		<table class="playlists">
-			<thead>
-				<tr>
-					<th>#</th>
-					<th>Playlists</th>
-					<th>Created</th>
-					<th>Updated</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="playlist in playlists">
-					<td>{{ $index + 1 }}</td>
-					<td><a ng-href="#/{{playlist.hash}}">{{ playlist.hash }}</a></td>
-					<td>{{ playlist.created | date:'medium' }}</td>
-					<td>{{ playlist.updated | date:'medium' }}</td>
-					<td>
-						<button ng-click="share(playlist)">Share</button>
-						<button ng-click="delete(playlist)">Delete</button>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-
-		<div class="account">
-			
-			
-
+		<div class="playlists">
+			<table>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Playlist</th>
+						<th>Creator</th>
+						<th>Updated</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody ng-if="playlists">
+					<tr ng-repeat="playlist in playlists | orderBy:'updated':true">
+						<td>{{ $index + 1 }}</td>
+						<td><a ng-href="#/{{playlist.hash}}">{{ playlist.hash }}</a></td>
+						<td>
+							<a ng-if="User.name != playlist.name" ng-href="#/user/{{ playlist.name }}">{{ playlist.name }}</a>
+							<span ng-if="User.name == playlist.name">You</span>
+						</td>
+						<td am-time-ago="playlist.updated"></td>
+						<td class="actions" width="200">
+							<button class="button" ng-click="toggleModal('share', playlist)">Share</button>
+							<button class="button" ng-click="toggleModal('delete', playlist, $index)" ng-if="playlist.userRole == 'creator'">Delete</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<a href="#/new" class="button">New Playlist</a>
+		</div>
+		<div class="user">
 		</div>
 
 	</div>

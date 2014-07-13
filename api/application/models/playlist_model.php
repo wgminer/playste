@@ -23,7 +23,7 @@ class Playlist_model extends CI_Model {
         $this->db->join('playlists', 'playlists.id = playlist_users.playlistId');
         $this->db->join('users', 'users.id = playlist_users.userId ');
 
-        $this->db->select('playlists.id, playlists.hash, users.name, playlists.created, playlists.updated');
+        $this->db->select('playlists.id, playlists.hash, users.name, playlists.created, playlists.updated, playlist_users.userRole');
 
         $query = $this->db->get('playlist_users');
 
