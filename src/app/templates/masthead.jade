@@ -1,0 +1,5 @@
+.container
+    p.logo Playste
+    form.form(ng-submit="submit(url)", ng-class="{'is--valid': urlValid}")
+        input.input(type="text", ng-model="url", ng-change="isValid(url)" placeholder="Paste a song URL to add it to the playlist")
+        span.enter Press enter
