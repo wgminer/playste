@@ -1,0 +1,22 @@
+
+<header pl-masthead="pl-masthead" role="banner" class="masthead">
+  <div class="container">
+    <p class="logo">Playste</p>
+    <form ng-submit="submit(url)" ng-class="{'is--valid': urlValid}" class="form">
+      <input type="text" ng-model="url" ng-change="isValid(url)" placeholder="Paste a song URL to add it to the playlist" class="input"/><span class="enter">Press enter</span>
+    </form>
+  </div>
+</header>
+<div class="playlist">
+  <div class="container">
+    <div class="playlist__table">
+      <div pl-item="pl-item" tabindex="0" ng-repeat="item in playlist track by $index" class="item item--{{ item.source }}">
+        <div class="item__media">
+          <div class="item__artwork"><img ng-src="{{ item.image_url }}" alt=""/></div>
+        </div>
+        <div class="item__title">{{ item.title }}</div>
+        <div class="item__duration">{{ duration(item.duration) }}</div>
+      </div>
+    </div>
+  </div>
+</div>

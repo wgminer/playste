@@ -1,0 +1,34 @@
+doctype html
+html(lang="en", ng-app="playste")
+    head
+        meta(charset="utf-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        title Playste
+        link(href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css", rel="stylesheet", type="text/css")
+        script(src="https://use.typekit.net/nuh3nan.js")
+        script.
+            try{Typekit.load({ async: true });}catch(e){}
+        link(rel="stylesheet", href="css/playste.css")
+    body
+        main(ui-view="", autoscroll="true")
+
+        .controls
+            .container
+                .controls__group
+                    button.controls__button
+                        span.ion-skip-backward(aria-label="previous song")
+                    button.controls__button(ng-hide="playing")
+                        span.ion-play(aria-label="play song")
+                    button.controls__button(ng-show="playing")
+                        span.ion-pause(aria-label="pause song")
+                    button.controls__button
+                        span.ion-skip-forward(aria-label="next song")
+                .controls__playing
+
+        script(src="//www.youtube.com/iframe_api")
+        script(src="//connect.soundcloud.com/sdk/sdk-3.0.0.js")
+        script(src="//w.soundcloud.com/player/api.js")
+
+        script(src="js/playste.js")
+
+

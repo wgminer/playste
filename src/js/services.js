@@ -19,6 +19,32 @@ app.factory('Api', function ($q, $firebaseObject) {
 
 });
 
+app.factory('Queue', function ($state, $firebaseObject, YouTube, SoundCloud) {
+
+    var module = {};
+    var ref = new Firebase('https://playste.firebaseio.com/playlists');
+    var queue = [];
+
+    module.add = function (song) {
+        queue.push(song);
+    }
+
+    module.next = function (song) {
+        queue.unshift(song);
+    }
+
+    module.set = function (newQueue) {
+        queue = newQueue;
+    }
+
+    module.get = function () {
+        return queue;
+    }
+
+    return module;
+
+});
+
 app.factory('Playlist', function ($state, $firebaseObject, YouTube, SoundCloud) {
 
     var module = {};
@@ -53,6 +79,7 @@ app.factory('Playlist', function ($state, $firebaseObject, YouTube, SoundCloud) 
 
     module.resolveUrl = function (url, callback) {
         if (url != '') {
+            console.log(url);
             if (url.indexOf('youtu') > -1) {
                 YouTube.newYTSong(url)
                     .then(function (song) {
@@ -80,8 +107,9 @@ app.factory('Playlist', function ($state, $firebaseObject, YouTube, SoundCloud) 
 app.factory('YouTube', function ($http, $q) {
 
     var ytAPIKey = 'AIzaSyBbHFX8Vfs6JA3U0QVO55QqAkg7QMAm8_0';
+    var module = {};
 
-    var newYTSong = function(url) {
+    module.newYTSong = function(url) {
 
         if (url.lastIndexOf('?v=') > -1) {
             var start = url.lastIndexOf('?v=') + 3;
@@ -92,28 +120,38 @@ app.factory('YouTube', function ($http, $q) {
         }
 
         var ytID = url.substring(start, start+11);
-        var url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id='+ytID+'&key='+ytAPIKey;
+        var contentDetailsUrl = 'https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id='+ytID+'&key='+ytAPIKey;
+        var snippetUrl = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id='+ytID+'&key='+ytAPIKey;
         var deferred = $q.defer();
 
-        $http.get(url)
-            .success(function(data){
+        $http.get(contentDetailsUrl)
+            .success(function(details){
 
-                if (data.items[0].snippet.thumbnails.maxres) {
-                    var imageUrl = data.items[0].snippet.thumbnails.maxres.url;
-                } else if (data.items[0].snippet.thumbnails.high) {
-                    var imageUrl = data.items[0].snippet.thumbnails.high.url;
-                } else {
-                    var imageUrl = data.items[0].snippet.thumbnails.default.url;
-                }
+                $http.get(snippetUrl)
+                    .success(function(data){
 
-                var newSong = {
-                    title: data.items[0].snippet.title,
-                    image_url: imageUrl,
-                    source: 'youtube',
-                    source_id: data.items[0].id,
-                    source_url: 'https://www.youtube.com/watch?v='+data.items[0].id
-                }
-                deferred.resolve(newSong);
+                        if (data.items[0].snippet.thumbnails.maxres) {
+                            var imageUrl = data.items[0].snippet.thumbnails.maxres.url;
+                        } else if (data.items[0].snippet.thumbnails.high) {
+                            var imageUrl = data.items[0].snippet.thumbnails.high.url;
+                        } else {
+                            var imageUrl = data.items[0].snippet.thumbnails.default.url;
+                        }
+
+                        var newSong = {
+                            title: data.items[0].snippet.title,
+                            image_url: imageUrl,
+                            source: 'youtube',
+                            source_id: data.items[0].id,
+                            source_url: 'https://www.youtube.com/watch?v='+data.items[0].id,
+                            duration: moment.duration(details.items[0].contentDetails.duration)._milliseconds
+                        }
+                        deferred.resolve(newSong);
+
+                    })
+                    .error(function(){
+                        deferred.reject();
+                    });
             })
             .error(function(){
                 deferred.reject();
@@ -123,15 +161,16 @@ app.factory('YouTube', function ($http, $q) {
 
     }
 
-    return {
-        newYTSong: newYTSong
-    }
+    return module;
 
 });
 
 app.factory('SoundCloud', function ($http, $q) {
 
-    var newSCSong = function(url) {
+    var module = {};
+    module.newSCSong = function(url) {
+
+        console.log(url);
 
         SC.initialize({
             client_id: 'e732213f2ca2d1ca96c10924da125f83'
@@ -139,16 +178,20 @@ app.factory('SoundCloud', function ($http, $q) {
 
         var deferred = $q.defer();
 
-        SC.get('/resolve', { url: url }, function(data) {
+        SC.get('/resolve', { 'url': url }, function(data) {
 
             console.log(data);
 
-            if (data.embeddable_by != 'me') {
+            if (data && data.embeddable_by != 'me') {
 
                 if (data.artwork_url) {
                     var image = data.artwork_url;
                 } else {
                     var image = data.user.avatar_url;
+                }
+
+                if (data.title.indexOf(' - ') == -1) {
+                    data.title = data.user.username + ' - ' + data.title;
                 }
                     
                 var newSong = {
@@ -157,6 +200,7 @@ app.factory('SoundCloud', function ($http, $q) {
                     source: 'soundcloud',
                     source_id: data.id,
                     source_url: data.permalink_url,
+                    duration: data.duration
                 }
                 deferred.resolve(newSong);
 
@@ -170,8 +214,6 @@ app.factory('SoundCloud', function ($http, $q) {
 
     }
 
-    return {
-        newSCSong: newSCSong
-    }
+    return module;
 
 });

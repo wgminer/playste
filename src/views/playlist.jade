@@ -1,0 +1,15 @@
+include ../includes/masthead
+
+.playlist
+    .container
+        .playlist__table
+            .item(pl-item, tabindex="0", ng-repeat="item in playlist track by $index", class="item--{{ item.source }}")
+                .item__media
+                    .item__artwork
+                        img(ng-src="{{ item.image_url }}", alt="")
+                .item__title {{ item.title }}
+                .item__duration {{ duration(item.duration) }}
+                //- .item__timestamp(am-time-ago="item.timestamp")
+
+//- pre
+//-     code {{ playlist | json }}

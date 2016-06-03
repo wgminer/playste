@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="playste">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Playste</title>
+    <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+    <script src="https://use.typekit.net/nuh3nan.js"></script>
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>
+    <link rel="stylesheet" href="css/playste.css">
+  </head>
+  <body>
+    <main ui-view="" autoscroll="true"></main>
+    <div class="controls">
+      <div class="container">
+        <div class="controls__group">
+          <button class="controls__button"><span aria-label="previous song" class="ion-skip-backward"></span></button>
+          <button ng-hide="playing" class="controls__button"><span aria-label="play song" class="ion-play"></span></button>
+          <button ng-show="playing" class="controls__button"><span aria-label="pause song" class="ion-pause"></span></button>
+          <button class="controls__button"><span aria-label="next song" class="ion-skip-forward"></span></button>
+        </div>
+        <div class="controls__playing"></div>
+      </div>
+    </div>
+    <script src="//www.youtube.com/iframe_api"></script>
+    <script src="//connect.soundcloud.com/sdk/sdk-3.0.0.js"></script>
+    <script src="//w.soundcloud.com/player/api.js"></script>
+    <script src="js/playste.js"></script>
+  </body>
+</html>

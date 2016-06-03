@@ -1,0 +1,10 @@
+
+<header pl-masthead="pl-masthead" role="banner" class="masthead">
+  <div class="container">
+    <p class="logo">Playste</p>
+    <form ng-submit="submit(url)" ng-class="{'is--valid': urlValid}" class="form">
+      <input type="text" ng-model="url" ng-change="isValid(url)" placeholder="Paste a song URL to add it to the playlist" class="input"/><span class="enter">Press enter</span>
+    </form>
+  </div>
+</header>
+<h1>Splash</h1>

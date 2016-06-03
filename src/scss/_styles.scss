@@ -1,14 +1,17 @@
 // VARIABLES
 // -------------------------------------
 
-$border-color: #ddd;
+$bg: #222;
+$border-color: #666;
 $border: 1px solid $border-color;
 $radius: 4px;
 $radius-lg: 3px;
-$text: #222;
+$text: #fff;
 $link: #3344dd;
 $link-hover: #bb1122;
 $link-visited: #884488;
+
+$accent: #ff00bf;
 
 $create: #27ae60;
 $danger: #c0392b;
@@ -50,12 +53,18 @@ html {
 }
 
 body {
-    background-color: #fff;
+    background-color: $bg;
     color: $text;
     font-size: 100%;
     font-family: "neuzeit-grotesk", "helvetica neue", sans-serif;
     line-height: 1.4;
     margin: 0;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 a {
@@ -69,10 +78,15 @@ a {
     }
 }
 
+.dot {
+    float: left;
+    margin: 0 .5rem;
+}
+
 .container {
     margin: 0 auto;
     padding: 0 2rem;
-    max-width: 60rem;
+    width: 60rem;
 }
 
 .button {
@@ -131,5 +145,22 @@ a {
             margin: 2px 0 -2px;
             box-shadow: 0 0 $fb;
         }
+    }
+}
+
+.playlist {
+    padding: 4rem 0;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+
+    .container {
+        flex: 0 0 auto;
+        padding-bottom: 120px;
+    }
+
+    &__table {
+        display: table;
+        width: 100%;
     }
 }

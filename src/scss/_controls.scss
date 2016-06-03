@@ -1,0 +1,57 @@
+$control-height: 50px;
+
+.controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-top: $border;
+    min-height: $control-height;
+    background-color: $bg;
+
+    .container {
+        position: relative;
+    }
+
+    &__group {
+        border-left: $border;
+        display: flex;
+        width: $control-height * 3;
+        height: $control-height;
+    }
+
+    &__button {
+        background-color: transparent;
+        border: 0;
+        flex: 1 1 auto;
+        line-height: $control-height;
+        text-align: center;
+        border-right: $border;
+        position: relative;
+        z-index: 1;
+
+        &:hover {
+            background-color: #444;
+        }
+
+        &:focus {
+            outline: 1px solid $accent;
+            z-index: 2;
+        }
+    }
+
+    &__scrobbler {
+
+    }
+
+    &__playing {
+        position: absolute;
+        right: 2rem;
+        height: 200px;
+        border: $border;
+        border-bottom: 0;
+        bottom: 0;
+        width: 260px;
+        background-color: $bg;
+    }
+}
